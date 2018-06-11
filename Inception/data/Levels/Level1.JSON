@@ -1,0 +1,22 @@
+[
+  {
+    "comment": "As there are no comments in JSON, we have to do this. The IDs are as follows: Platforms =  1, Falling Platforms = 2, Spikes =  3, Moving Spikes =  4, Fake = 5, Saws =  6, Laser Guns =  7",
+    "comment2": "XType and YType are for processing to be able to process the string for the co-ordinates. Possible values are: Height minus MultBox, Width minus MultBox, MultBox, Divide Height and AddBox, Divide Width and AddBox, Divide Height, Divide Width, or Already a Float. There is a more in-depth explination, as to what these do, in Don't Give Up's source code in the LevelBase tab.",
+    "ID": 1,
+    "X": "0",
+    "Y": "0",
+    "XType": "Already a Float",
+    "YType": "Already a Float",
+    "Accel": 0,
+    "Velocity": 0,
+    "Velocity Limit": 0,
+    "Direc": 0,
+    "Image Name": "box.png",
+    "Min": 0,
+    "Max": 0,
+    "Gravity Delay": 0,
+    "Speed": 0,
+    "Flip Gravity": false,
+    "Timer": 0
+  }
+]
