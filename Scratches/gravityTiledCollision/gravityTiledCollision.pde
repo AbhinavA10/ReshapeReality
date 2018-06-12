@@ -5,7 +5,7 @@ ArrayList <Wall> alWall = new ArrayList<Wall>();
 int i;
 boolean bDrawn = false;
 String sDrawDirec="Right";
-
+// make tilesize in this file 32 x 32
 StringDict wallObjects[];
 import ptmx.*;
 
@@ -14,14 +14,14 @@ void setup() {
   size(900, 600);
   vPos= new PVector (230, 20);
   vPosStart = new PVector (250, 20);
-  box = new Box(vPos, 0.8, 0.3, 8, false, 0, 50, vPosStart);
+  box = new Box(vPos, 0.8, 0.3, 8, 0, 32, vPosStart);
   map = new Ptmx(this, "walls.tmx");
   wallObjects = map.getObjects(2); // check layer index
 }
 void draw() {
-  background(20);
-  line(0, 500, 900, 500);
-  stroke(0, 255, 0);
+  background(#3D5DA2);
+  stroke(0, 255, 0); // lime green line style
+  line(0, 500, 900, 500); // "groudn line"
   createBoxes();
   box.update();
   for (i = 0; i<alWall.size(); i++) {

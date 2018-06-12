@@ -10,6 +10,7 @@
 
 ## To do (Way Later):
 - Discrete collision detection method
+- Quadtree / Spatial Partioning
 
 ## Sources
 - [Using a Mask in Processing to Generate the Window Effect](https://stackoverflow.com/questions/21534545/draw-opposite-of-shape-in-papplet)
