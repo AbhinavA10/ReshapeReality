@@ -95,7 +95,7 @@ class Level {
     int nGravityDelay = jsonObjLevels.getInt("Gravity Delay");
     int nSpeed = jsonObjLevels.getInt("Speed");
     boolean bFlipGravity  = jsonObjLevels.getBoolean("Flip Gravity");
-    int nShotDelayMan = jsonObjLevels.getInt("Timer");
+    int nTimer = jsonObjLevels.getInt("Timer");
     switch(nId) {
     case 1: 
       alPlat.add(new Sprite (fX, fY, fAccel, fVelocity, nVelocityLimit, nDirec, sImgName, nMin, nMax, nGravityDelay, nSpeed, bFlipGravity));
@@ -116,7 +116,7 @@ class Level {
       alSaws.add(new Sprite(fX, fY, fAccel, fVelocity, nVelocityLimit, nDirec, sImgName, nMin, nMax, nGravityDelay, nSpeed, bFlipGravity));
       break;
     case 7: 
-      alLaserGuns.add(new LaserGun(round(fX), round(fY), nShotDelayMan));
+      alLaserGuns.add(new LaserGun(round(fX), round(fY), nTimer));
       break;
     }
   }
@@ -228,7 +228,8 @@ class Level {
   void checkSpikes() {
     for (Sprite nI : alSpikes) {
       if (isHit(sprHero, nI)) {
-        sprHero.respawn();
+        sprHero.respawn();        
+        sprHero.masterMode();
       }
     }
     for (Sprite nI : alMovingSpikes) {
@@ -236,7 +237,8 @@ class Level {
         nI.bActivateGravity=true;
       }
       if (isHit(sprHero, nI)) {
-        sprHero.respawn();
+        sprHero.respawn();        
+        sprHero.masterMode();
       }
     }
   }
@@ -244,14 +246,21 @@ class Level {
   void checkSaws() {
     for (Sprite nI : alSaws) {
       if (isHit(sprHero, nI)) {
-        sprHero.respawn();
+        sprHero.respawn();        
+        sprHero.masterMode();
       }
     }
   }
   // ============== CHECK-FOR-HIT-DOORS =============================================
   void checkForHitDoors() {
     if (isHit(sprHero, sprExit)) {
-      sprHero.advanceLevel();
+      if (!sprHero.bHasTimerStarted) {      
+        timer.start();
+        sprHero.bHasTimerStarted=true;
+      }
+      if (timer.isReachedTime()) {
+        sprHero.advanceLevel();
+      }
     }
   }
   // ============== UPDATE BULLETS =============================================
@@ -266,7 +275,8 @@ class Level {
           if (soundMenu.isMuted() == false) {
             soundHit.trigger();
           }
-          sprHero.respawn();
+          sprHero.respawn();  
+          sprHero.masterMode();
           alBullets = null;
           alBullets = new ArrayList <Sprite> ();
           break;
