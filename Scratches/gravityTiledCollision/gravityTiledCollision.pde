@@ -5,23 +5,34 @@ ArrayList <Wall> alWall = new ArrayList<Wall>();
 int i;
 boolean bDrawn = false;
 String sDrawDirec="Right";
-// make tilesize in this file 32 x 32
 StringDict wallObjects[];
 import ptmx.*;
 
-Ptmx map;
+Ptmx ptmxMap;
 void setup() {
-  size(900, 600);
+  size(576, 480); // 18*32, 15*32
   vPos= new PVector (230, 20);
   vPosStart = new PVector (250, 20);
-  box = new Box(vPos, 0.8, 0.3, 8, 0, 32, vPosStart);
-  map = new Ptmx(this, "walls.tmx");
-  wallObjects = map.getObjects(2); // check layer index
+  box = new Box(vPos, 0.8, 0.3, 8, 0, 25, vPosStart);
+
+  ptmxMap = new Ptmx(this, "walls.tmx");
+   ptmxMap.setDrawMode(CORNER);   // origin of each thing is in top left corner like normal
+ ptmxMap.setPositionMode("CANVAS"); // all position stuff will be in pixel distances
+  wallObjects = ptmxMap.getObjects(2); // check layer index
 }
 void draw() {
   background(#3D5DA2);
   stroke(0, 255, 0); // lime green line style
-  line(0, 500, 900, 500); // "groudn line"
+  /*
+  In TMX file, 
+  WallTiledObjects: Layer 2
+  wallImages: Layer 1
+  BackgroundLayer: Layer 0
+  
+  */
+  println( ptmxMap.mapToCanvas(ptmxMap.getMapSize()).x);
+  ptmxMap.draw(1,0,0); // this draws the wall layer,  Visible property in Tiled is ignored when drawing individual layers.
+  line(0, 500, 900, 500); // "ground line"
   createBoxes();
   box.update();
   for (i = 0; i<alWall.size(); i++) {
