@@ -23,11 +23,11 @@ void draw() {
   background(#3D5DA2);
   stroke(0, 255, 0); // lime green line style
   /*
-  NOTES
   In TMX file, 
    WallTiledObjects: Layer 2
    wallImages: Layer 1
    BackgroundLayer: Layer 0
+   
    */
   //println(ptmxMap.getMapSize());
   //println( ptmxMap.mapToCanvas(ptmxMap.getMapSize()).x); // mapToCanvas doesn't work for my tiled map settings. Messes something up
@@ -43,20 +43,14 @@ void draw() {
     alWall.get(i).display();
   }
 }
-
-// ====================THE PINNACLE OF THIS LIBRARY ========
+// function I need to fix
 void createBoxes() {
   if (bDrawn == false) {
-    wallObjects = ptmxMap.getObjects(2); // get all objects in a certain layer (in this case #2). returns as  a string dictionary (kind of like a hash map)
-    if (wallObjects==null) {
-      println("no objects here bois");
-    } else {
-      for (int i = 0; i<wallObjects.length; i++) {
-        println(wallObjects[i]);
-        // next line does the beauty!!, string dicts are string:string, like a string hash map I guess?. Anyways, need to convert to int and then use it
-        alWall.add(new Wall(parseInt(wallObjects[i].get("x")), parseInt(wallObjects[i].get("y")), parseInt(wallObjects[i].get("width")),parseInt(wallObjects[i].get("height"))));
-      }
-    }
+    //alWall.add(new Wall(150, 450, 50));
+    //alWall.add(new Wall(200, 450, 50));
+    //alWall.add(new Wall(250, 450, 50));
+    //alWall.add(new Wall(250, 400, 50));
+    //alWall.add(new Wall(200, 200, 50));
     bDrawn = true;
   }
 }
@@ -76,11 +70,11 @@ void keyPressed() {
 }
 
 
-boolean isHitUpDown(float nX1, float nY1, float nX2, float nY2, int nWidth1, int nHeight1, int nWidth2, int nHeight2) {
-  int nW1 = nWidth1;
-  int nW2 = nWidth2;
-  int nH1 = nHeight1;
-  int nH2 = nHeight2;
+boolean isHitUpDown(float nX1, float nY1, float nX2, float nY2, int nSize1, int nSize2) {
+  int nW1 = nSize1;
+  int nW2 = nSize2;
+  int nH1 = nSize1;
+  int nH2 = nSize2;
   if (
     ( ( (nX1 <= nX2) && (nX1+nW1 >= nX2) ) ||
     ( (nX1 >= nX2) && (nX1 <= nX2+nW2) ) )
@@ -92,11 +86,11 @@ boolean isHitUpDown(float nX1, float nY1, float nX2, float nY2, int nWidth1, int
   else
     return(false) ;
 }
-boolean isHitLeftRight(float nX1, float nY1, float nX2, float nY2, int nWidth1, int nHeight1, int nWidth2, int nHeight2) {
-  int nW1 = nWidth1;
-  int nW2 = nWidth2;
-  int nH1 = nHeight1;
-  int nH2 = nHeight2;
+boolean isHitLeftRight(float nX1, float nY1, float nX2, float nY2, int nSize1, int nSize2) {
+  int nW1 = nSize1;
+  int nW2 = nSize2;
+  int nH1 = nSize1;
+  int nH2 = nSize2;
   if (
     ( ( (nX1 <= nX2) && (nX1+nW1 >= nX2) ) ||
     ( (nX1 >= nX2) && (nX1 <= nX2+nW2) ) )

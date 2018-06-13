@@ -54,7 +54,7 @@ class Box {
   }
   void checkUpDown() {
     for (i = 0; i<alWall.size(); i++) {
-      if (isHitUpDown(box.vPos.x, box.vPos.y, alWall.get(i).fX, alWall.get(i).fY, box.nSize, alWall.get(i).nSize)) {
+      if (isHitUpDown(box.vPos.x, box.vPos.y, alWall.get(i).fX, alWall.get(i).fY, box.nSize, box.nSize, alWall.get(i).nSizeX, alWall.get(i).nSizeY)) {
         fVelocity = 0;  
         vPos.y = vPosStart.y;
       }
@@ -62,11 +62,11 @@ class Box {
   }
 
   void jump() {
-      fVelocity = -20;
+    fVelocity = -20;
   }
   void checkLeftRight() {
     for (i = 0; i<alWall.size(); i++) {
-      if (isHitLeftRight(box.vPos.x, box.vPos.y, alWall.get(i).fX, alWall.get(i).fY, box.nSize, alWall.get(i).nSize)) {
+      if (isHitLeftRight(box.vPos.x, box.vPos.y, alWall.get(i).fX, alWall.get(i).fY, box.nSize, box.nSize, alWall.get(i).nSizeX, alWall.get(i).nSizeY)) {
         box.nDirec=0;
         vPos.x = vPosStart.x;
       }

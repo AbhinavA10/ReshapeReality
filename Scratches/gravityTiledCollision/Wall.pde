@@ -1,15 +1,16 @@
 class Wall {
   float  fX, fY;
   color c;
-  int nSize;
-  Wall( float fTempX, float fTempY, int tempNsize) {
+  int nSizeX, nSizeY;
+  Wall( float fTempX, float fTempY, int tempNsize,int tempNsize2) {
     fX = fTempX;
     fY = fTempY;
-    nSize = tempNsize;
+    nSizeX = tempNsize;
+    nSizeY = tempNsize2;
     c = color(random(255), random(255), random(255), random(255));
   }
   void display() {
     fill(c);
-    rect( fX, fY, nSize, nSize);
+    rect( fX, fY, nSizeX, nSizeY);
   }
 }
