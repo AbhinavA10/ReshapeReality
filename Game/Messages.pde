@@ -59,14 +59,14 @@ class Messages {
      https://www.processing.org/discourse/alpha/board_Syntax_action_display_num_1087808386.html
      https://processing.org/reference/conditional.html*/
     // "\n" is for a new line
-    sMessage[0] = ".";
-    sMessage[1] = ".";
+    sMessage[0] = userInfo.bNameIsThere? "Back for more "+userInfo.sName+"?":"Hello there "+userInfo.sName+".";
+    sMessage[1] = userInfo.bNameIsThere? "It's good to see you again.":"I like meeting new people.";
     sMessage[2] = "This level is pretty tricky.";
     sMessage[3] = "You can do it!";
     sMessage[4] = "Wow! Great job!";
     sMessage[5] = "You're so good at this game! \n I bet you can beat it!";
     sMessage[6] = "Sometimes things are not \n as hard as they seem.";
-    sMessage[7] = "Sometimes things are not \n as easy as they seem.";
+    sMessage[7] = "Sometimes things are not \n as easy as they seem. \n (141-312-121)"; //sppppspppsppspps
     sMessage[8] = "Even I couldn't beat that last one!";
     sMessage[9] = "One day I want to be as good at this as you.";
     sMessage[10] = "You're already on the eleventh level?!?! \n You are flying through this game!"; 

@@ -1,8 +1,7 @@
-// English Summative
-// TODO
 /*
-- add control screen (maybe screen = 3)
-- add window frame mechanic
+Ideas: use giveupbutton as cutscene thing
+user timer for cutscenes only
+use window class to see how to do parralax for background
 */
 
 /*
@@ -38,10 +37,15 @@ Sprite sprExit; // door
 SpriteAnimated sprHero;
 Messages messageEye; // messages near the eye
 Messages messageOther; // the level message
+GiveUpButton giveUpButton;
+Timer timer; // a regular timer (the one that displays)
+Timer buttonTimer; // for the give up button
 Menu menu;
+Window window;
 Level Lvl;
 JSONArray jsonArLevels;
 JSONObject jsonObjLevels;
+JSONArray jsonArUserInfo;
 JSONObject jsonObjUser;
 // ============== SETUP =============================================
 void setup() {
@@ -60,11 +64,16 @@ void setup() {
   sprExit = new SpriteAnimated (nLevelWidth-nBoxSize-84, nLevelHeight-nBoxSize-73, 0, 0, 0, 1, "door.png", 4, 7, 0, 0, false, 4, 2, 3); // 48 for width of the door
   sprHero = new SpriteAnimated (nBoxSize + 2, nLevelHeight - nBoxSize*2, 1.6, 0.6, 16, 0, "PixelCrab.png", 0, 0, 0, 6, false, 4, 1, 5); // to fix the lag had to change from 0.8 to 1.6, 0.3 to 0.6, 8 to 16 
 
-  messageEye = new Messages ((int( nLevelWidth/2)), (height/2)-(height/4)+5, 0, 0, "eye");
+  messageEye = new Messages ((int(width/2), (height/2)-(height/4)+5, 0, 0, "eye");
   messageOther = new Messages (width-4*nBoxSize, height-nBoxSize+5, 4*nBoxSize-10, nBoxSize-10, "other");
 
-  menu = new Menu();
+  timer = new Timer(nBoxSize/4, height-nBoxSize+5, 5*nBoxSize-20, nBoxSize-10, 1000); // input is in milliseconds 
+  buttonTimer = new Timer(0, 0, 0, 0, 3000); // just choose 3000 as a random time, it is later set to the length of the audio
 
+  menu = new Menu();
+  window = new Window();
+
+  giveUpButton = new GiveUpButton(width/2-85, height-nBoxSize+3);
   minim = new Minim(this);
   soundJump = minim.loadSample("jump.wav");
   soundShoot = minim.loadSample("Laser Sound.mp3");
@@ -75,8 +84,14 @@ void setup() {
   soundShoot.setGain(9001); //OVER 9000!!!!!! ... even though the max is around 6....
   soundHit.setGain(9001); //OVER 9000!!!!!! ... even though the max is around 6....
   arSoundMessage = new AudioSample[10]; 
+  while (giveUpButton.nCount<=9) {
+    arSoundMessage[giveUpButton.nCount] = minim.loadSample("soundButton"+str(int(giveUpButton.nCount+1))+".mp3");
+    arSoundMessage[giveUpButton.nCount].setGain(9001); //OVER 9000!!!!!! ... even though the max is around 6....
+    giveUpButton.nCount++;
+  }
+  giveUpButton.nCount=0;
+
   soundMenu.loop();
-  messageEye.update();
 }
 // ============== DRAW =============================================
 void draw() {
@@ -85,51 +100,56 @@ void draw() {
   if (nScreen < 3 ) {
     menu.update();
   }
+  if (nScreen == 3) {
+  }
   if (nScreen == 4) {
-    background(20);
-    pushMatrix();  
-    updateCameraPosition();  
-    translate(-nXCamOffset, -nYCamOffset);//translate the origin by the cameraOffset variable to give a sidescrolling effect
-    Lvl.drawLevel();
-    for (Sprite nI : Lvl.alGore) {
-      nI.display();
-    }
-    sprEntry.display();
-    sprExit.display();
-    sprHero.update();
+    if (!giveUpButton.bTimerStarted) {
+      background(20);
+      pushMatrix();  
+      updateCameraPosition();  
+      window.update();
+      translate(-nXCamOffset, -nYCamOffset);//translate the origin by the cameraOffset variable to give a sidescrolling effect
+      //println(giveUpButton.bTimerStarted); // used for debugging
+      Lvl.drawLevel();
+      for (Sprite nI : Lvl.alGore) {
+        nI.display();
+      }
+      sprEntry.display();
+      sprExit.display();
+      sprHero.update();
+      //the for loop is from https://processing.org/reference/for.html, we can use it as along as we are not modifying the arrayList
+      for (Sprite nI : Lvl.alBox) {//nI = 0; nI<alBox.size(); nI++) { // old loop type
+        nI.display();
+      }
+      for (Sprite nI : Lvl.alPlat) {
+        nI.display();
+      }
+      for (Sprite nI : Lvl.alSpikes) {
+        nI.display();
+      }
+      for (Sprite nI : Lvl.alSaws) {
+        nI.updateSaw();
+      }
+      for (LaserGun nI : Lvl.alLaserGuns) {
+        nI.update();
+      }
+      for (Sprite nI : Lvl.alFake) {
+        nI.display();
+      }
+      for (Sprite nI : Lvl.alFallPlats) {
+        nI.gravity();
+        nI.display();
+      }
+      for (Sprite nI : Lvl.alMovingSpikes) {
+        nI.updateMovingSpikes();
+      }
+      messageEye.display();
+      popMatrix();
 
-    //the for loop is from https://processing.org/reference/for.html, we can use it as along as we are not modifying the arrayList
-    for (Sprite nI : Lvl.alBox) {//nI = 0; nI<alBox.size(); nI++) { // old loop type
-      nI.display();
+      messageOther.display();
+      timer.display();
     }
-    for (Sprite nI : Lvl.alPlat) {
-      nI.display();
-    }
-    for (Sprite nI : Lvl.alSpikes) {
-      nI.display();
-    }
-    for (Sprite nI : Lvl.alSaws) {
-      nI.updateSaw();
-    }
-    for (LaserGun nI : Lvl.alLaserGuns) {
-      nI.update();
-    }
-    for (Sprite nI : Lvl.alFake) {
-      nI.display();
-    }
-    for (Sprite nI : Lvl.alFallPlats) {
-      nI.gravity();
-      nI.display();
-    }
-    for (Sprite nI : Lvl.alMovingSpikes) {
-      nI.updateMovingSpikes();
-    }
-
-    messageEye.display();
-    popMatrix();
-
-    messageOther.display();
-
+    giveUpButton.update();
     //println(laserGun.vPosPlayer, sprHero.fX, sprHero.fY, laserGun.angle); // used for debugging
   }
 }
@@ -138,6 +158,11 @@ void mousePressed() {
   if (mouseButton==LEFT) {
     if (nScreen < 3) {  
       menu.mouse();
+    } else if (nScreen==3) {  
+    } else if (nScreen==4) {  
+      if (isHitButton(giveUpButton.imgButtonDisplayed, giveUpButton.nX, giveUpButton.nY)) { // reason we needed to test collision here is because the hotkeys use the same function
+        giveUpButton.giveUpButton();
+      }
     }
   }
 }
@@ -153,6 +178,7 @@ void keyPressed() {
   if (key == BACKSPACE) {
     if (nScreen==1||nScreen==2) {
       nScreen=0;
+    } else if (nScreen==3) {
     }
   }
   // main menu
@@ -166,26 +192,34 @@ void keyPressed() {
   // settings
   else if (nScreen == 1) {
     menu.key();
-  }
+  } 
+  // names
+  else if (nScreen == 3) {
+  } 
   // game
   else if (nScreen == 4) {
-    if (key == 'w' || key == 'W'||keyCode==UP) {
-      sprHero.jump();
-      sprHero.nJumpCount++;
-    }
-    if (key == 'd' || key == 'D'||keyCode==RIGHT) {
-      sprHero.nDirec=1; //right
-      sprHero.nLastDirec=1; // needed for animations to face the same way after stopping
-    }
-    if (key == 'a' || key == 'A'||keyCode==LEFT) {
-      sprHero.nDirec=2; //left'
-      sprHero.nLastDirec=2; // needed for animations to face the same way after stopping
-    }
-    if (key=='g'||key=='G') {
-      bGKey=true;
-    }
-    if (keyCode==CONTROL) {
-      bCTRLKey=true;
+    if (!giveUpButton.bTimerStarted) {
+      if (key == 'w' || key == 'W'||keyCode==UP) {
+        sprHero.jump();
+        sprHero.nJumpCount++;
+      }
+      if (key == 'd' || key == 'D'||keyCode==RIGHT) {
+        sprHero.nDirec=1; //right
+        sprHero.nLastDirec=1; // needed for animations to face the same way after stopping
+      }
+      if (key == 'a' || key == 'A'||keyCode==LEFT) {
+        sprHero.nDirec=2; //left'
+        sprHero.nLastDirec=2; // needed for animations to face the same way after stopping
+      }
+      if (key=='g'||key=='G') {
+        bGKey=true;
+      }
+      if (keyCode==CONTROL) {
+        bCTRLKey=true;
+      }
+      if (bCTRLKey && bGKey) {
+        giveUpButton.giveUpButton();
+      }
     }
   }
 }
@@ -251,9 +285,25 @@ boolean isHitButton(PImage img, float fX, float fY) {
 } 
 // ============== STOP =============================================
 void stop() {
+  giveUpButton.nCount=0;
+  while (giveUpButton.nCount<=9) {
+    arSoundMessage[giveUpButton.nCount].close();
+    giveUpButton.nCount++;
+  }
   minim.stop();
+  if (!userInfo.sName.equals("Enter your name.")) {   
+    userInfo.updateUserInfo();
+    println("This is who you are and what you are made of:");
+    println(jsonObjUser);
+  }
   super.stop();
 }
 void exit() {          
+  if (!userInfo.sName.equals("Enter your name.")) {   
+    userInfo.updateUserInfo();
+    println("This is who you are and what you are made of:");
+    println(jsonObjUser);
+    if (nLevel==nLastLevel+1) println("Wow. You made it. I don't believe it! \n  AWESOME!");
+  }
   super.exit();
 }

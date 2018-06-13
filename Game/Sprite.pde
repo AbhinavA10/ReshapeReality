@@ -13,6 +13,8 @@ class Sprite {
   boolean bHasTimerStarted; // used to delay things (like falling platforms and moving onto the next level)
   boolean bChangeDir;
   PImage img;
+  int nDeathCount;
+  boolean bMasterMode=false;
   boolean bFlipGravity=false;
 
   boolean bReachedLR = true;
@@ -86,17 +88,21 @@ class Sprite {
   // ============== ADVANCE LEVEL =============================================
   void advanceLevel() {
     respawn(); 
+    nDeathCount--; // to 'hack' around adding a death in respawn
     Lvl.bDrawn=false; 
     bFlipGravity=false;
     nLevel++;
     if (nLevel==nLastLevel+1) {
       exit();
     }
+    userInfo.updateUserInfo();
   }
   // ============== RESPAWN =============================================
   void respawn() {
     background(20);
     bHasTimerStarted=false; 
+    nDeathCount++;
+    userInfo.updateUserInfo();
     refreshCoord();
     if (Lvl.alGore.size()>5) { // you see, we would have used an array for Al Gore images, but the naming of the arrayList 'alGore" is just too precious.
       Lvl.alGore.remove(0);
@@ -107,7 +113,11 @@ class Sprite {
     nDirec=0;
     nJumpCount=0;
     Lvl.alBullets.clear();   
-    refreshCoord();
+    refreshCoord();    
+    sprSidekick.vPos.set(nBoxSize + 2, nLevelHeight - 3*nBoxSize); // added to remove sprSidekick.respawn in levelBase
+    sprSidekick.fXstart = vPos.x;
+    sprSidekick.fYstart = vPos.y;
+    sprSidekick.refreshCoord();
     for (Sprite nI : Lvl.alFallPlats) {
       nI.vPos.set(nI.fXstart, nI.fYstart);
       nI.bActivateGravity=false;
@@ -120,6 +130,13 @@ class Sprite {
       nI.bActivateGravity=false;
       nI.fVelocity=0;
       nI.refreshCoord();
+    }
+  }
+  // ============== MASTER MODE =============================================
+  void masterMode() {
+    if (bMasterMode) {
+      nLevel=1;
+      Lvl.bDrawn=false;
     }
   }
   // ============== DISPLAY =============================================

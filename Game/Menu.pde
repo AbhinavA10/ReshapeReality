@@ -143,7 +143,7 @@ class Menu {
   void mouse() {  
     if (nScreen==0) {
       if (isHitButton(imgBegin, fXBegin, fYBegin)) {
-        nScreen=4;
+        nScreen=3;
       }    
       if (isHitButton(imgGear, fXGear, fYGear)) {
         nScreen=1;
@@ -159,6 +159,17 @@ class Menu {
         } else {
           soundMenu.mute();        
           imgSound=imgSoundOff;
+        }
+      } 
+      if (isHitButton(imgMasterMode, fXMasterMode, fYMasterMode)) {
+        if (!sprHero.bMasterMode) {
+          sprHero.bMasterMode=true;          
+          imgMasterMode=imgMasterModeOn;
+          println("Master Mode activated");
+        } else {
+          sprHero.bMasterMode=false;            
+          imgMasterMode=imgMasterModeOff;      
+          println("MasterMode deactivated");
         }
       }
       if (isHitButton(imgBack, fXBack, fYBack)) {
@@ -209,6 +220,17 @@ class Menu {
       } else {
         soundMenu.mute();        
         imgSound=imgSoundOff;
+      }
+    }
+    if (key == 'h' || key == 'H') {
+      if (!sprHero.bMasterMode) {
+        sprHero.bMasterMode=true;          
+        imgMasterMode=imgMasterModeOn;
+        println("yes");
+      } else {
+        sprHero.bMasterMode=false;            
+        imgMasterMode=imgMasterModeOff;      
+        println("no");
       }
     }
   }
