@@ -3,9 +3,6 @@ class Level {
   ArrayList <Sprite> alPlat = new ArrayList<Sprite>(); // nId = 1
   ArrayList <Sprite> alFallPlats = new ArrayList <Sprite>(); // nId = 2
   ArrayList <Sprite> alSpikes = new ArrayList<Sprite>(); // nId = 3
-  ArrayList <Sprite> alMovingSpikes = new ArrayList <Sprite>(); // nId = 4
-  ArrayList <Sprite> alFake = new ArrayList <Sprite>(); // nId = 5
-  ArrayList <Sprite> alSaws = new ArrayList<Sprite>(); // nId = 6
   ArrayList <LaserGun> alLaserGuns = new ArrayList <LaserGun> (); // nId = 7
   ArrayList <Sprite> alBullets = new ArrayList <Sprite> ();
 
@@ -105,15 +102,6 @@ class Level {
     case 3: 
       alSpikes.add(new Sprite (fX, fY, fAccel, fVelocity, nVelocityLimit, nDirec, sImgName, nMin, nMax, nGravityDelay, nSpeed, bFlipGravity));
       break;
-    case 4: 
-      alMovingSpikes.add(new Sprite (fX, fY, fAccel, fVelocity, nVelocityLimit, nDirec, sImgName, nMin, nMax, nGravityDelay, nSpeed, bFlipGravity));
-      break;
-    case 5: 
-      alFake.add(new Sprite (fX, fY, fAccel, fVelocity, nVelocityLimit, nDirec, sImgName, nMin, nMax, nGravityDelay, nSpeed, bFlipGravity));
-      break;
-    case 6: 
-      alSaws.add(new Sprite(fX, fY, fAccel, fVelocity, nVelocityLimit, nDirec, sImgName, nMin, nMax, nGravityDelay, nSpeed, bFlipGravity));
-      break;
     case 7: 
       alLaserGuns.add(new LaserGun(round(fX), round(fY), nTimer));
       break;
@@ -166,12 +154,9 @@ class Level {
     // Clear function for the ArrayLists were found here: https://processing.org/reference/IntList_clear_.html
     alPlat.clear();
     alSpikes.clear();
-    alSaws.clear();
     alLaserGuns.clear();
     alBullets.clear();
-    alFake.clear();
     alFallPlats.clear();
-    alMovingSpikes.clear();
   }
   // ============== CHECK-UP-DOWN =============================================
   void checkUpDown() {
@@ -225,22 +210,6 @@ class Level {
   // ============== CHECK-SPIKES =============================================
   void checkSpikes() {
     for (Sprite nI : alSpikes) {
-      if (isHit(sprHero, nI)) {
-        sprHero.respawn();
-      }
-    }
-    for (Sprite nI : alMovingSpikes) {
-      if (isOver(sprHero, nI, 10)) {
-        nI.bActivateGravity=true;
-      }
-      if (isHit(sprHero, nI)) {
-        sprHero.respawn();
-      }
-    }
-  }
-  // ============== CHECK SAWS =============================================
-  void checkSaws() {
-    for (Sprite nI : alSaws) {
       if (isHit(sprHero, nI)) {
         sprHero.respawn();
       }
@@ -300,14 +269,7 @@ class Level {
         }    
         if (!bSkip) {
           if (alBullets.size()!=0) {
-            for (int nL = 0; nL<alMovingSpikes.size(); nL ++) {
-              if (isHit(alBullets.get(nI), alMovingSpikes.get(nL))) {
-                alBullets.remove(nI);
-                //nI--;
-                bSkip=true;
-                break;
-              }
-            }
+            
           }
         }
         if (!bSkip) {
@@ -321,25 +283,6 @@ class Level {
             }
           }
         }
-        // original
-        /* if (alBullets.size()!=0) {
-         for (int nJ = 0; nJ<alPlat.size(); nJ ++) {
-         if (isHit(alBullets.get(nI), alPlat.get(nJ))) {
-         alBullets.remove(nI);
-         // nI--;
-         break;
-         }
-         }
-         } 
-         if (alBullets.size()!=0) {
-         for (int nK = 0; nK<alBox.size(); nK ++) {
-         if (isHit(alBullets.get(nI), alBox.get(nK))) {
-         alBullets.remove(nI);
-         //nI--;
-         break;
-         }
-         }
-         }*/
       }
     }
   }
@@ -425,45 +368,6 @@ class Level {
       return (true) ;
     } else {
       return(false) ;
-    }
-  }
-  // ============== IS HIT DIREC ============================================= 
-  boolean isHitDirec(Sprite one) { // for the saws
-    float fX, fMinX, fMaxX, fY, fMinY, fMaxY;
-    int nDirec;
-    nDirec = one.nDirec;
-    fX = one.fX;
-    fMinX = one.nMinX;
-    fMaxX = one.nMaxX;
-    fY = one.fY; 
-    fMinY = one.nMinY;
-    fMaxY = one.nMaxY;
-    if (nDirec==1||nDirec==2) {
-      if (fX<fMinX||fX>fMaxX) {
-        return (true) ;
-      } else {
-        return(false) ;
-      }
-    } else if (nDirec==3||nDirec==4) {
-      if (fY<fMinY||fY>fMaxY) {
-        return (true) ;
-      } else {
-        return(false) ;
-      }
-    } else if (nDirec==5||nDirec==6) {
-      if ((fX<fMinX && fY<fMinY)||(fX>fMaxX && fY>fMaxY)) {
-        return (true) ;
-      } else {
-        return(false) ;
-      }
-    } else if (nDirec==7||nDirec==8) {
-      if ((fX<fMinX && fY>fMaxY)||(fX>fMaxX && fY<fMinY)) { // has to be weird cuz the direc is weird (ru, ld) and Y is oppisite in pixels
-        return (true) ;
-      } else {
-        return(false) ;
-      }
-    } else {
-      return (false);
     }
   }
 }

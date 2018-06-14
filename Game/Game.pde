@@ -1,9 +1,4 @@
-/*
-Ideas: use giveupbutton as cutscene thing
- user timer for cutscenes only?
- use window class to see how to do parralax for background
- 
- */
+// BY ABHINAV AGRAHARI. Started off with Don't Give up architecture, and then moved forward
 /*
  NOTE: You will have to download the Minim library:
  At the top of the processing window, click on Sketch -> Import Library
@@ -15,7 +10,7 @@ import ddf.minim.*;
  http://code.compartmental.net/minim/
  http://code.compartmental.net/tools/minim/quickstart/  */
 Minim minim;
-AudioPlayer soundSoundTrack;
+AudioPlayer soundGame;
 AudioSample soundJump;
 AudioSample soundShoot;
 AudioSample soundHit;
@@ -36,12 +31,12 @@ Sprite sprEntry; // door
 Sprite sprExit; // door
 SpriteAnimated sprHero;
 Messages messageEye; // messages near the eye
-Messages messageOther; // the level message
+Messages messageLevelNum; // the level message
 GiveUpButton giveUpButton;
 Timer timer; // a regular timer (the one that displays)
 Timer buttonTimer; // for the give up button
 Menu menu;
-Window window;
+BackGround backgroundParallax;
 Level Lvl;
 JSONArray jsonArLevels;
 JSONObject jsonObjLevels;
@@ -65,20 +60,20 @@ void setup() {
   sprHero = new SpriteAnimated (nBoxSize + 2, nLevelHeight - nBoxSize*2, 1.6, 0.6, 16, 0, "PixelCrab.png", 0, 0, 0, 6, false, 4, 1, 5); // to fix the lag had to change from 0.8 to 1.6, 0.3 to 0.6, 8 to 16 
 
   messageEye = new Messages (int(width/2), (height/2)-(height/4)+5, 0, 0, "eye");
-  messageOther = new Messages (width-4*nBoxSize, height-nBoxSize+5, 4*nBoxSize-10, nBoxSize-10, "other");
+  messageLevelNum = new Messages (width-4*nBoxSize, height-nBoxSize+5, 4*nBoxSize-10, nBoxSize-10, "other");
 
   timer = new Timer(nBoxSize/4, height-nBoxSize+5, 5*nBoxSize-20, nBoxSize-10, 1000); // input is in milliseconds 
   buttonTimer = new Timer(0, 0, 0, 0, 3000); // just choose 3000 as a random time, it is later set to the length of the audio
 
   menu = new Menu();
-  window = new Window();
+  backgroundParallax = new BackGround();
 
   giveUpButton = new GiveUpButton(width/2-85, height-nBoxSize+3);
   minim = new Minim(this);
   soundJump = minim.loadSample("jump.wav");
   soundShoot = minim.loadSample("Laser Sound.mp3");
   soundHit = minim.loadSample("hit sound.mp3");
-  soundSoundTrack = minim.loadFile("DontGiveUp.mp3");
+  soundGame = minim.loadFile("DontGiveUp.mp3");
   soundMenu = minim.loadFile("Beepify.mp3");
   soundJump.setGain(9001); //OVER 9000!!!!!! ... even though the max is around 6....
   soundShoot.setGain(9001); //OVER 9000!!!!!! ... even though the max is around 6....
@@ -105,7 +100,7 @@ void draw() {
       background(20);
       pushMatrix();  
       updateCameraPosition();  
-      window.update();
+      backgroundParallax.update();
       translate(-nXCamOffset, -nYCamOffset);//translate the origin by the cameraOffset variable to give a sidescrolling effect
       //println(giveUpButton.bTimerStarted); // used for debugging
       Lvl.drawLevel();
@@ -121,26 +116,17 @@ void draw() {
       for (Sprite nI : Lvl.alSpikes) {
         nI.display();
       }
-      for (Sprite nI : Lvl.alSaws) {
-        nI.updateSaw();
-      }
       for (LaserGun nI : Lvl.alLaserGuns) {
         nI.update();
-      }
-      for (Sprite nI : Lvl.alFake) {
-        nI.display();
       }
       for (Sprite nI : Lvl.alFallPlats) {
         nI.gravity();
         nI.display();
       }
-      for (Sprite nI : Lvl.alMovingSpikes) {
-        nI.updateMovingSpikes();
-      }
       messageEye.display();
       popMatrix();
 
-      messageOther.display();
+      messageLevelNum.display();
       timer.display();
     }
     giveUpButton.update();
@@ -155,7 +141,7 @@ void mousePressed() {
       nScreen=4;
       messageEye.update();
       soundMenu.pause();
-      soundSoundTrack.loop();
+      soundGame.loop();
     } else if (nScreen==4) {  
       if (isHitButton(giveUpButton.imgButtonDisplayed, giveUpButton.nX, giveUpButton.nY)) { // reason we needed to test collision here is because the hotkeys use the same function
         giveUpButton.giveUpButton();
@@ -236,14 +222,9 @@ void keyReleased() { // smoother movement
 }
 // ============== UPDATE CAMERA POSITION =============================================
 /* From platformer example // http://www.hobbygamedev.com/int/platformer-game-source-in-processing/
- 
- We used the concept from this source code after understanding how it worked.
- There wasn't much to change in the function below. 
- We had attempted to do it a different way, but it didn't work out so well.
- We did add the scrolling along the Y axis.
- 
- We also used constrain() instead of the if/else if structure
- It was found here: https://processing.org/reference/constrain_.html*/
+ used the concept from this source code after understanding how it worked.
+ did add the scrolling along the Y axis.
+ */
 void updateCameraPosition() {
   int nRightEdge = nLevelWidth-width;  // (width of the level - the width of the screen output area)
   /* the left side of the updated camera panel shouldn't go so much 

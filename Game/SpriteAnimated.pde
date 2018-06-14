@@ -1,7 +1,3 @@
-/*For inheritance, we got help from Mr. Grondin, and the following sites:
- https://processing.org/examples/inheritance.html
- https://processing.org/reference/extends.html
- https://processing.org/reference/super.html*/
 // this class includes animation
 class SpriteAnimated extends Sprite {
   ArrayList<PImage> alImages = new ArrayList<PImage>(); // all of the images.

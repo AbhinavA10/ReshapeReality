@@ -189,6 +189,8 @@ class Menu {
       } else {
         cursor(ARROW);
       }
+    } else if (nScreen == 3) { // Controls Screen
+      cursor(HAND);
     }
   }
   // ============== KEY =============================================

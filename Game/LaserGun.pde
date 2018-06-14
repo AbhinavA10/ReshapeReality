@@ -1,3 +1,4 @@
+// can use this class for either mouse shooting window lockers, or the enemy shooter things
 class LaserGun {
   PVector vPosGun, vPosPlayer, vDBullet;   
   PImage imgGun;
@@ -10,9 +11,8 @@ class LaserGun {
   LaserGun(int nTempX, int nTempY, int nTempShotDelay) {
     vPosGun = new PVector(nTempX, nTempY);
     vPosPlayer = new PVector(sprHero.fX, sprHero.fY);
-    vDBullet = PVector.sub(vPosPlayer, vPosGun); // original was vDBullet = vPosPlayer.sub(vPosGun); // was really annoying
+    vDBullet = PVector.sub(vPosPlayer, vPosGun);
     imgGun = loadImage("Laser_Gun.png");
-    //imgGun.resize(0, 30);
     imgGun.resize(0, 40);
     fAngle = 0; 
     nShotDelay=nTempShotDelay;

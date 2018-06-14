@@ -1,3 +1,4 @@
+//use giveupbutton as cutscene thing
 class GiveUpButton {
   ArrayList<PImage> alImgMessages = new ArrayList<PImage>(); // all of the images.
   PImage imgButtonDisplayed, imgButtonNormal, imgButtonHover;
@@ -37,7 +38,7 @@ class GiveUpButton {
         } else {
           bTimerStarted=false;
           if (soundMenu.isMuted() == false) {
-            soundSoundTrack.loop();
+            soundGame.loop();
             arSoundMessage[nCount].stop();
           }
         }
@@ -48,16 +49,15 @@ class GiveUpButton {
       cursor(HAND);
     } else {
       imgButtonDisplayed=imgButtonNormal;
-      cursor(ARROW);
+      cursor(CROSS);
     }
   }
   // ============== GIVE UP BUTTON =============================================
   void giveUpButton() {
     if (!giveUpButton.bTimerStarted) {
       nCount++;
-      //println(giveUpButton.nCount);
       if (soundMenu.isMuted() == false) {
-        soundSoundTrack.pause();
+        soundGame.pause();
         arSoundMessage[nCount-1].trigger();
       }
       buttonTimer.nTimerLength = arSoundMessage[nCount-1].length();
