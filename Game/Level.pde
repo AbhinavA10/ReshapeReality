@@ -8,7 +8,6 @@ class Level {
   ArrayList <Sprite> alSaws = new ArrayList<Sprite>(); // nId = 6
   ArrayList <LaserGun> alLaserGuns = new ArrayList <LaserGun> (); // nId = 7
   ArrayList <Sprite> alBullets = new ArrayList <Sprite> ();
-  ArrayList <Sprite> alGore = new ArrayList <Sprite> ();
 
   boolean bDrawn = false;// needed for multiple levels and to stop continously adding more boxes/spikes
   boolean bSkip = false; // used for bullets
@@ -170,7 +169,6 @@ class Level {
     alSaws.clear();
     alLaserGuns.clear();
     alBullets.clear();
-    alGore.clear();
     alFake.clear();
     alFallPlats.clear();
     alMovingSpikes.clear();
@@ -228,8 +226,7 @@ class Level {
   void checkSpikes() {
     for (Sprite nI : alSpikes) {
       if (isHit(sprHero, nI)) {
-        sprHero.respawn();        
-        sprHero.masterMode();
+        sprHero.respawn();
       }
     }
     for (Sprite nI : alMovingSpikes) {
@@ -237,8 +234,7 @@ class Level {
         nI.bActivateGravity=true;
       }
       if (isHit(sprHero, nI)) {
-        sprHero.respawn();        
-        sprHero.masterMode();
+        sprHero.respawn();
       }
     }
   }
@@ -246,8 +242,7 @@ class Level {
   void checkSaws() {
     for (Sprite nI : alSaws) {
       if (isHit(sprHero, nI)) {
-        sprHero.respawn();        
-        sprHero.masterMode();
+        sprHero.respawn();
       }
     }
   }
@@ -275,8 +270,7 @@ class Level {
           if (soundMenu.isMuted() == false) {
             soundHit.trigger();
           }
-          sprHero.respawn();  
-          sprHero.masterMode();
+          sprHero.respawn();
           alBullets = null;
           alBullets = new ArrayList <Sprite> ();
           break;
