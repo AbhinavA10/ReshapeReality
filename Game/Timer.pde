@@ -1,8 +1,4 @@
-/*  We use this class to have a timer appear on screen, and 
- make it so that you don't instantly move onto the next level,
- but you do so after a second of touching the door.
- We also use it for the give up Button
- */
+// need timer for shooters
 class Timer {
   int nTimerLength;
   int nTimeAtTimerStart;     

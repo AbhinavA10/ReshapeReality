@@ -113,12 +113,6 @@ class Sprite {
       nI.bHasTimerStarted=false;
       nI.fVelocity=0;
       nI.refreshCoord();
-    }    
-    for (Sprite nI : Lvl.alMovingSpikes) {
-      nI.vPos.set(nI.fXstart, nI.fYstart);
-      nI.bActivateGravity=false;
-      nI.fVelocity=0;
-      nI.refreshCoord();
     }
   }
   // ============== DISPLAY =============================================
@@ -149,8 +143,7 @@ class Sprite {
     move();
     Lvl.checkLeftRight();
     gravity();
-    Lvl.checkSpikes();    
-    Lvl.checkSaws();
+    Lvl.checkSpikes();  
     Lvl.updateBullets();
     Lvl.checkUpDown();
     Lvl.checkForHitDoors();
@@ -332,42 +325,5 @@ class Sprite {
      }
      }
      }*/
-  }
-  // ============== UPDATE SAW =============================================
-  void updateSaw() {
-    changeSawDirec();
-    move();
-    display();
-  }  
-  // ============== CHANGE SAW DIREC =============================================
-  void changeSawDirec() {  
-    if (Lvl.isHitDirec(this)) {
-      switch(this.nDirec) {
-      case 1: 
-        this.nDirec=2;
-        break;
-      case 2: 
-        this.nDirec=1;
-        break;
-      case 3: 
-        this.nDirec=4;
-        break;
-      case 4: 
-        this.nDirec=3;
-        break;
-      case 5: 
-        this.nDirec=6;
-        break;
-      case 6: 
-        this.nDirec=5;
-        break;
-      case 7: 
-        this.nDirec=8;
-        break;
-      case 8: 
-        this.nDirec=7;
-        break;
-      }
-    }
   }
 }
