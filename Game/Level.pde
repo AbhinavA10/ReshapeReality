@@ -1,10 +1,9 @@
-class Level extends PApplet {
-  ArrayList <Sprite> alBox = new ArrayList<Sprite>(); 
-  ArrayList <Sprite> alPlat = new ArrayList<Sprite>(); // nId = 1
-  ArrayList <Sprite> alFallPlats = new ArrayList <Sprite>(); // nId = 2
-  ArrayList <Sprite> alSpikes = new ArrayList<Sprite>(); // nId = 3
-  ArrayList <LaserGun> alLaserGuns = new ArrayList <LaserGun> (); // nId = 7
+class Level {
+  ArrayList <Sprite> alPlat = new ArrayList<Sprite>(); //
+  ArrayList <Sprite> alSpikes = new ArrayList<Sprite>(); // 
+  ArrayList <LaserGun> alLaserGuns = new ArrayList <LaserGun> (); //
   ArrayList <Sprite> alBullets = new ArrayList <Sprite> ();
+  // maybe add a destructible tile?
 
   boolean bDrawn = false;// needed for multiple levels and to stop continously adding more boxes/spikes
   boolean bSkip = false; // used for bullets
@@ -48,7 +47,8 @@ class Level extends PApplet {
           int nY = parseInt(tiledObjects[i].get("y"));
           int nWidth = parseInt(tiledObjects[i].get("width"));
           int nHeight = parseInt(tiledObjects[i].get("height"));
-          alPlat.add(new Sprite (nX, nY, fAccel, fVelocity, nVelocityLimit, nDirec, sImgName, nMin, nMax, nGravityDelay, nSpeed, bFlipGravity));
+          //Sprite(float fTempX, float fTempY, float fTempAccel, float fTempVelocity, int nTempVelocityLimit, int nTempMin, int nTempMax, int nTempGravityDelay) {
+          alPlat.add(new Sprite (nX, nY, nWidth, nHeight, 0, 0, 0, 0, 0));
         }
       }
       bDrawn = true;
@@ -100,52 +100,20 @@ class Level extends PApplet {
     alSpikes.clear();
     alLaserGuns.clear();
     alBullets.clear();
-    alFallPlats.clear();
   }
   // ============== CHECK-UP-DOWN =============================================
   void checkUpDown() {
-    for (Sprite nI : alBox) {
-      if (isHit(sprHero, nI)) {
-        sprHero.fVelocity = 0; // reset velocity
-        sprHero.nJumpCount=0; // if you hit the top or bottom of the box, it resets the jump amount
-        sprHero.vPos.y = sprHero.fYstart;
-      }
-    }
     for (Sprite nI : alPlat) {
       if (isHit(sprHero, nI)) {
         sprHero.fVelocity = 0; // reset velocity
         sprHero.nJumpCount=0; // if you hit the top or bottom of the box, it resets the jump amount
         sprHero.vPos.y = sprHero.fYstart;
-      }
-    }
-    for (Sprite nI : alFallPlats) {
-      if (isHit(sprHero, nI)) {
-        if (nI.bHasTimerStarted==false) {
-          nI.nTimeAtTimerStart=millis();
-          nI.bHasTimerStarted=true;
-        }  
-        nI.nTimeSinceTimerStarted = millis() - nI.nTimeAtTimerStart;
-        if (nI.nTimeSinceTimerStarted >= nI.nGravityDelay) {
-          nI.bActivateGravity=true;
-        }
-        sprHero.vPos.y = sprHero.fYstart;
-        sprHero.nJumpCount=0; // if you hit the top or bottom of the box, it resets the jump amount
       }
     }
   }
   // ============== CHECK-LEFT-RIGHT =============================================
-  void checkLeftRight() { 
-    for (Sprite nI : alBox) {
-      if (isHit(sprHero, nI)) {
-        sprHero.vPos.x = sprHero.fXstart;
-      }
-    }
+  void checkLeftRight() {
     for (Sprite nI : alPlat) {
-      if (isHit(sprHero, nI)) {
-        sprHero.vPos.x = sprHero.fXstart;
-      }
-    }
-    for (Sprite nI : alFallPlats) {
       if (isHit(sprHero, nI)) {
         sprHero.vPos.x = sprHero.fXstart;
       }
@@ -161,7 +129,7 @@ class Level extends PApplet {
   }
   // ============== CHECK-FOR-HIT-DOORS =============================================
   void checkForHitDoors() {
-    if (isHit(sprHero, sprExit)) {
+    if (isHitImageImage(sprHero, sprExit)) {
       if (!sprHero.bHasTimerStarted) {      
         timer.start();
         sprHero.bHasTimerStarted=true;
@@ -178,7 +146,7 @@ class Level extends PApplet {
       for (int nI = alBullets.size()-1; nI>=0; nI--) {
         bSkip=false;
         alBullets.get(nI).updateV();
-        if (isHit(alBullets.get(nI), sprHero)) {
+        if (isHitImageImage(alBullets.get(nI), sprHero)) {
           alBullets.remove(nI);
           if (soundMenu.isMuted() == false) {
             soundHit.trigger();
@@ -211,27 +179,39 @@ class Level extends PApplet {
             }
           }
         }    
-        if (!bSkip) {
-          if (alBullets.size()!=0) {
-          }
-        }
-        if (!bSkip) {
-          if (alBullets.size()!=0) {
-            for (int nM = 0; nM<alBox.size(); nM ++) {
-              if (isHit(alBullets.get(nI), alBox.get(nM))) {
-                alBullets.remove(nI);
-                //nI--;
-                break;
-              }
-            }
-          }
-        }
+        //if (!bSkip) {
+        //  if (alBullets.size()!=0) {
+        //  }
+        //}
       }
     }
   }
-  // ============== IS-HIT =============================================
-  // original isHit(float nX1, float nY1, float nX2, float nY2, int nH1, int nW1, int nH2, int nW2) { 
+  // ============== IS-HIT =============================================   this function is for when a sprite with image hits a sprite without one
   boolean isHit(Sprite one, Sprite two) {
+    float fX1, fY1, fX2, fY2;
+    int nH1, nW1, nH2, nW2;
+    fX1 = one.fX;
+    fY1 = one.fY; 
+    fX2 = two.fX;
+    fY2 = two.fY;
+    nH1 = one.img.height;
+    nW1 = one.img.width;
+    nH2 = two.nWidth;
+    nW2 = two.nHeight;
+    if (
+      ( ( (fX1 <= fX2) && (fX1+nW1 >= fX2) ) ||
+      ( (fX1 >= fX2) && (fX1 <= fX2+nW2) ) )
+      &&
+      ( ( (fY1 <= fY2) && (fY1+nH1 >= fY2) ) ||
+      ( (fY1 >= fY2) && (fY1 <= fY2+nH2) ) )
+      ) {
+      return (true) ;
+    } else {
+      return(false) ;
+    }
+  }
+  // ============== IS-HIT-IMAGE-IMAGE =============================================   this function is for when two sprites with images hit each other
+  boolean isHitImageImage(Sprite one, Sprite two) {
     float fX1, fY1, fX2, fY2;
     int nH1, nW1, nH2, nW2;
     fX1 = one.fX;
@@ -272,23 +252,6 @@ class Level extends PApplet {
       &&
       ( ( (fY1 <= fY2) && (fY1+nH1 >= fY2) ) ||
       ( (fY1 >= fY2) && (fY1 <= fY2+nH2) ) )
-      ) {
-      return (true) ;
-    } else {
-      return(false) ;
-    }
-  }
-  // ============== IS OVER =============================================
-  boolean isOver(Sprite one, Sprite two, int nRange) { // needed for moving spikes
-    float fX1, fX2;
-    int nW1, nW2;
-    fX1 = one.fX-nRange;
-    fX2 = two.fX-nRange;
-    nW1 = one.img.width+nRange*2;
-    nW2 = two.img.width+nRange*2;
-    if (
-      ( ( (fX1 <= fX2) && (fX1+nW1 >= fX2) ) ||
-      ( (fX1 >= fX2) && (fX1 <= fX2+nW2) ) )
       ) {
       return (true) ;
     } else {
