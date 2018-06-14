@@ -5,6 +5,7 @@
  -> Add Library. Then search for Minim and click Install.
  */
 import ddf.minim.*;
+import ptmx.*;
 // ============== MINIM SETUP =========================================================
 /* Everything to do with Minim can be found at the following links:
  http://code.compartmental.net/minim/
@@ -40,13 +41,16 @@ BackGround backgroundParallax;
 Level Lvl;
 JSONArray jsonArLevels;
 JSONObject jsonObjLevels;
-JSONArray jsonArUserInfo;
-JSONObject jsonObjUser;
+Ptmx ptmxMap;
 // ============== SETUP =============================================
 void setup() {
   frameRate(30); // to fix the lag
   background(20);
   cursor(WAIT);
+  ptmxMap = new Ptmx(this, "Level1.tmx");
+  ptmxMap.setDrawMode(CORNER);   // origin of each thing is in top left corner like normal
+  ptmxMap.setPositionMode("CANVAS"); // all position stuff will be in pixel distances
+
   size(900, 600); //18 nBoxSize, 12 nBoxSize
   nLevelHeight = height + nBoxSize; //19 nBoxSize
   nLevelWidth=width + width/2; // 27 nBoxSize
@@ -103,7 +107,8 @@ void draw() {
       backgroundParallax.update();
       translate(-nXCamOffset, -nYCamOffset);//translate the origin by the cameraOffset variable to give a sidescrolling effect
       //println(giveUpButton.bTimerStarted); // used for debugging
-      Lvl.drawLevel();
+      Lvl.createLevel();
+      ptmxMap.draw(1, 0, 0); // this draws the tiles layer,  Visible property in Tiled is ignored when drawing individual layers.
       sprEntry.display();
       sprExit.display();
       sprHero.update();
