@@ -7,6 +7,7 @@ class Sprite {
   int nJumpCount = 0;  // we used this instead of canJump just in case we ever wanted to be able to dobule jump
   int nMax, nMin;
   int nMinX, nMaxX, nMinY, nMaxY, nSpeed;
+  int nWidth, nHeight; // for collisions in tiled objects
   int nDeg = 0;
   PVector vPos;  
   PVector[] vD = new PVector[9];
@@ -76,6 +77,28 @@ class Sprite {
     nTimeAtTimerStart = millis();
     bHasTimerStarted=false;
     bFlipGravity=bTempFlipGravity;
+  }// ============== CONSTRUCTOR FOR TILED OBJECTS =============================================
+  Sprite(float fTempX, float fTempY, int n_Width, int n_Height, float fTempAccel, float fTempVelocity, int nTempVelocityLimit, int nTempMin, int nTempMax) {
+    fX = fTempX;
+    fY = fTempY;    
+    fXstart = fX;
+    fYstart = fY;
+    nWidth = n_Width;
+    nHeight = n_Height;
+    vPos = new PVector(fX, fY);
+    fAccel = fTempAccel; 
+    fVelocity = fTempVelocity;
+    fVelocityLimit = nTempVelocityLimit;
+
+    nMin=nTempMin;
+    nMax=nTempMax;
+    nMinX = round(fX-nMin);
+    nMaxX = round(fX+nMax);
+    nMinY = round(fY-nMin);
+    nMaxY = round(fY+nMax);
+
+    nTimeAtTimerStart = millis();
+    bHasTimerStarted=false;
   }
   // ============== CONSTRUCTOR FOR BULLETS =============================================
   Sprite(String sTempImgName, PVector _vPos, PVector _vDirBullet) {
@@ -101,19 +124,12 @@ class Sprite {
     bHasTimerStarted=false; 
     nDeathCount++;
     refreshCoord();
-    vPos.set(nBoxSize + 2, nLevelHeight - nBoxSize - img.height - 2);
+    vPos.set(n_TILE_SIZE + 2, nLevelHeight - n_TILE_SIZE - img.height - 2);
     fVelocity = 0;
     nDirec=0;
     nJumpCount=0;
     Lvl.alBullets.clear();   
     refreshCoord();
-    for (Sprite nI : Lvl.alFallPlats) {
-      nI.vPos.set(nI.fXstart, nI.fYstart);
-      nI.bActivateGravity=false;
-      nI.bHasTimerStarted=false;
-      nI.fVelocity=0;
-      nI.refreshCoord();
-    }
   }
   // ============== DISPLAY =============================================
   void display() {
@@ -240,90 +256,5 @@ class Sprite {
   void refreshCoord() {
     fX = vPos.x;
     fY = vPos.y;
-  }
-  // ============== UPDATE MOVING SPIKES =============================================
-  void updateMovingSpikes() {
-    for (Sprite nI : Lvl.alBox) {
-      if (Lvl.isHit(this, nI)) {
-        round(fY);
-        bActivateGravity=false;
-      }
-    }
-    for (Sprite nI : Lvl.alPlat) {
-      if (Lvl.isHit(this, nI)) {        
-        round(fY);
-        bActivateGravity=false;
-      }
-    }
-    gravity();
-    if (!bActivateGravity) {
-      if (bFlipGravity) { 
-        if ( fY<fYstart) {
-          vPos.add(vD[nDirec]);
-        }
-      } else {
-        if (fY>fYstart) {
-          vPos.add(vD[nDirec]);
-        }
-      }
-    }
-    refreshCoord();
-    display();
-    /*fXstart = vPos.x;
-     fYstart = vPos.y;
-     gravity();
-     refreshCoord();
-     for (Sprite nI : Lvl.alBox) {
-     if (Lvl.isHit(this, nI)) {
-     if (this.bHasTimerStarted==false) {
-     this.nTimeAtTimerStart=millis();
-     this.bHasTimerStarted=true;
-     }  
-     vPos.y = fYstart;
-     this.nTimeSinceTimerStarted = millis() - this.nTimeAtTimerStart;
-     if (this.nTimeSinceTimerStarted >= this.nGravityDelay) {
-     move();
-     }
-     }
-     }
-     for (Sprite nI : Lvl.alPlat) {
-     if (Lvl.isHit(this, nI)) {
-     if (this.bHasTimerStarted==false) {
-     this.nTimeAtTimerStart=millis();
-     this.bHasTimerStarted=true;
-     }  
-     vPos.y = fYstart;
-     this.nTimeSinceTimerStarted = millis() - this.nTimeAtTimerStart;
-     if (this.nTimeSinceTimerStarted >= this.nGravityDelay) {
-     move();
-     }
-     }
-     }*/
-    /*move();
-     refreshCoord();
-     for (Sprite nI : Lvl.alBox) {
-     if (Lvl.isHit(this, nI)) {
-     switch(this.nDirec) {
-     case 3: 
-     this.nDirec=4;
-     break;
-     case 4: 
-     this.nDirec=3;
-     break;
-     }
-     }
-     }
-     for (Sprite nI : Lvl.alPlat) {
-     if (Lvl.isHit(this, nI)) {
-     switch(this.nDirec) {
-     case 3: 
-     this.nDirec=4;
-     break;
-     case 4: 
-     this.nDirec=3;
-     break;
-     }
-     }
-     }*/
   }
 }
