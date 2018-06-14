@@ -1,8 +1,6 @@
 class Menu {
   PImage imgSound, imgSoundOff, imgSoundOn;
   float fXSoundButton, fYSoundButton;
-  PImage imgMasterMode, imgMasterModeOff, imgMasterModeOn;
-  float fXMasterMode, fYMasterMode;
   PImage imgGear;
   float fXGear, fYGear;
   int nAngleGear = 0, nAngleGearCount;
@@ -22,11 +20,6 @@ class Menu {
     fXSoundButton = width / 8 * 5.5;
     fYSoundButton = (height / 8 * 3.6)-imgSound.height/2 + 3;
 
-    imgMasterModeOn = loadImage("masterModeOn.png");
-    imgMasterModeOff = loadImage("masterModeOff.png");
-    imgMasterMode=imgMasterModeOff;
-    fXMasterMode = width / 8 * 5.5;
-    fYMasterMode = (height / 8 * 4.65)-imgSound.height/2-10;
 
     imgGear=loadImage("gear.png");
     fXGear = width / 8 * 5.5-imgGear.width/2;
@@ -56,7 +49,7 @@ class Menu {
       textFont(font8Bit, 42); 
       textAlign(CENTER, CENTER);
       fill(255);
-      text("DON'T GIVE UP", width / 2, height /2 - 100); // orig was -50, but had to add -50 so everything moved up.
+      text("RESHAPE REALITY", width / 2, height /2 - 100); // orig was -50, but had to add -50 so everything moved up.
       textSize(14);
       text("Press 's' for settings", width / 2, height / 2-35); // orig was +15, but had to add -50 so everything moved up.
       text("Press 'c' credits", width / 2, height / 2+5); // orig was +55, but had to add -50 so everything moved up.
@@ -109,7 +102,6 @@ class Menu {
       textAlign(LEFT, TOP);
       text("TOGGLE MUSIC - PRESS M", width / 3.5, height / 8 * 3.6); 
       textAlign(CENTER, CENTER);
-      text("TOGGLE MASTER MODE - PRESS H", width / 2-60, height / 8 * 4.65);
       textSize(24);
       text("Press BACKSPACE to go back", width / 2, height / 8 * 6);
       if (isHitButton(imgSound, fXSoundButton, fYSoundButton)) {
@@ -117,14 +109,8 @@ class Menu {
         stroke(200);
         rect(fXSoundButton-5, fYSoundButton-5, imgSound.width+10, imgSound.height+10);
         fill(255);
-      } else if (isHitButton(imgMasterMode, fXMasterMode, fYMasterMode)) {
-        noFill();
-        stroke(200);
-        rect(fXMasterMode-5, fYMasterMode-5, imgMasterMode.width+10, imgMasterMode.height+10);
-        fill(255);
       } 
       image(imgSound, fXSoundButton, fYSoundButton);
-      image(imgMasterMode, fXMasterMode, fYMasterMode);
       updateBackButton();
     } else if (nScreen == 2) { // Credits
       background(20);
@@ -132,10 +118,17 @@ class Menu {
       textSize(42);
       text("CREDITS", width / 2, height / 8 * 2);
       textSize(18);
-      text("By Abhinav Agrahari and Matthew Meade", width / 2, height / 8 * 4.2);
+      text("By Abhinav Agrahari", width / 2, height / 8 * 4.2);
       textSize(24);
       text("Press BACKSPACE to go back", width / 2, height / 8 * 6);
       updateBackButton();
+    } else if (nScreen == 3) { // Controls
+      background(20);
+      textAlign(CENTER, CENTER);
+      textSize(42);
+      text("CONTROLS", width / 2, height / 8 * 2);
+      textSize(18);
+      text("Coming Soon", width / 2, height / 8 * 6);
     }
     changeCursor();
   }
@@ -161,17 +154,6 @@ class Menu {
           imgSound=imgSoundOff;
         }
       } 
-      if (isHitButton(imgMasterMode, fXMasterMode, fYMasterMode)) {
-        if (!sprHero.bMasterMode) {
-          sprHero.bMasterMode=true;          
-          imgMasterMode=imgMasterModeOn;
-          println("Master Mode activated");
-        } else {
-          sprHero.bMasterMode=false;            
-          imgMasterMode=imgMasterModeOff;      
-          println("MasterMode deactivated");
-        }
-      }
       if (isHitButton(imgBack, fXBack, fYBack)) {
         nScreen=0;
       }
@@ -196,8 +178,6 @@ class Menu {
     } else if (nScreen == 1) { // Settings
       if (isHitButton(imgSound, fXSoundButton, fYSoundButton)) {
         cursor(HAND);
-      } else if (isHitButton(imgMasterMode, fXMasterMode, fYMasterMode)) {
-        cursor(HAND);
       } else if (isHitButton(imgBack, fXBack, fYBack)) {     
         cursor(HAND);
       } else {
@@ -220,17 +200,6 @@ class Menu {
       } else {
         soundMenu.mute();        
         imgSound=imgSoundOff;
-      }
-    }
-    if (key == 'h' || key == 'H') {
-      if (!sprHero.bMasterMode) {
-        sprHero.bMasterMode=true;          
-        imgMasterMode=imgMasterModeOn;
-        println("yes");
-      } else {
-        sprHero.bMasterMode=false;            
-        imgMasterMode=imgMasterModeOff;      
-        println("no");
       }
     }
   }

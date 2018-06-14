@@ -14,7 +14,6 @@ class Sprite {
   boolean bChangeDir;
   PImage img;
   int nDeathCount;
-  boolean bMasterMode=false;
   boolean bFlipGravity=false;
 
   boolean bReachedLR = true;
@@ -95,29 +94,19 @@ class Sprite {
     if (nLevel==nLastLevel+1) {
       exit();
     }
-    userInfo.updateUserInfo();
   }
   // ============== RESPAWN =============================================
   void respawn() {
     background(20);
     bHasTimerStarted=false; 
     nDeathCount++;
-    userInfo.updateUserInfo();
     refreshCoord();
-    if (Lvl.alGore.size()>5) { // you see, we would have used an array for Al Gore images, but the naming of the arrayList 'alGore" is just too precious.
-      Lvl.alGore.remove(0);
-    }
-    Lvl.alGore.add(new Sprite(fX, fY, 0, 0, 0, 0, "alGore.png", 0, 0, 0, 0, false));
     vPos.set(nBoxSize + 2, nLevelHeight - nBoxSize - img.height - 2);
     fVelocity = 0;
     nDirec=0;
     nJumpCount=0;
     Lvl.alBullets.clear();   
-    refreshCoord();    
-    sprSidekick.vPos.set(nBoxSize + 2, nLevelHeight - 3*nBoxSize); // added to remove sprSidekick.respawn in levelBase
-    sprSidekick.fXstart = vPos.x;
-    sprSidekick.fYstart = vPos.y;
-    sprSidekick.refreshCoord();
+    refreshCoord();
     for (Sprite nI : Lvl.alFallPlats) {
       nI.vPos.set(nI.fXstart, nI.fYstart);
       nI.bActivateGravity=false;
@@ -130,13 +119,6 @@ class Sprite {
       nI.bActivateGravity=false;
       nI.fVelocity=0;
       nI.refreshCoord();
-    }
-  }
-  // ============== MASTER MODE =============================================
-  void masterMode() {
-    if (bMasterMode) {
-      nLevel=1;
-      Lvl.bDrawn=false;
     }
   }
   // ============== DISPLAY =============================================

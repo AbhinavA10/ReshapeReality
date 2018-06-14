@@ -54,13 +54,9 @@ class Messages {
   }
   // ============== UPDATE=============================================
   void update() { 
-    /* Below is a shorter way to "if/else" that works w/ strings
-     basically works like this - (expression) ? statement1 : statement2; 
-     https://www.processing.org/discourse/alpha/board_Syntax_action_display_num_1087808386.html
-     https://processing.org/reference/conditional.html*/
     // "\n" is for a new line
-    sMessage[0] = userInfo.bNameIsThere? "Back for more "+userInfo.sName+"?":"Hello there "+userInfo.sName+".";
-    sMessage[1] = userInfo.bNameIsThere? "It's good to see you again.":"I like meeting new people.";
+    sMessage[0] = "Hello there";
+    sMessage[1] = "I like meeting new people.";
     sMessage[2] = "This level is pretty tricky.";
     sMessage[3] = "You can do it!";
     sMessage[4] = "Wow! Great job!";
