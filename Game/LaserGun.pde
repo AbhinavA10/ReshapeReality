@@ -6,7 +6,7 @@ class LaserGun {
   int nShotDelay;
   int nTimeSinceTimerStarted;
   int nTimeAtTimerStart = millis();
-  int nDiag = round(sqrt(sq(nLevelWidth)+sq(nLevelHeight)));
+  int nDiag = round(sqrt(sq(width)+sq(height)));
   // ============== CONSTRUCTOR =============================================
   LaserGun(int nTempX, int nTempY, int nTempShotDelay) {
     vPosGun = new PVector(nTempX, nTempY);
