@@ -124,7 +124,7 @@ class Sprite {
     bHasTimerStarted=false; 
     nDeathCount++;
     refreshCoord();
-    vPos.set(n_TILE_SIZE + 2, nLevelHeight - n_TILE_SIZE - img.height - 2);
+    vPos.set(TILE_SIZE*4, TILE_SIZE*7);
     fVelocity = 0;
     nDirec=0;
     nJumpCount=0;

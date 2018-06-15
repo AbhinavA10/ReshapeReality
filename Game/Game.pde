@@ -20,11 +20,11 @@ AudioSample soundHit;
 AudioPlayer soundMenu;
 AudioSample[] arSoundMessage ;
 // ============== GLOBAL VARIABLES =============================================
+static final int TILE_SIZE = 32; //width of a tile
+
 int nLevel = 1; // the level number
 int nLastLevel = 20;
-static final int n_TILE_SIZE = 32; //width of a tile
-int nLevelHeight, nLevelWidth; // for only scrolling till the edge of the level  
-int nXCamOffset = 0, nYCamOffset = 0; //will translate by this much to give the effect of scrolling
+int nXCamOffset = 0, nYCamOffset = 0; //will translate by this much to give the effect of parallax
 PFont font8Bit, font8Bit2;
 boolean bGKey=false; // for hotkeys when trying to give up
 boolean bCTRLKey=false; // for hotkeys when trying to give up
@@ -54,40 +54,38 @@ void setup() {
   ptmxMap.setPositionMode("CANVAS"); // all position stuff will be in pixel distances
 
   size(1024, 640); //fix below line
-  nLevelHeight = height + n_TILE_SIZE; //19 nBoxSize
-  nLevelWidth=width + width/2; // 27 nBoxSize
 
   font8Bit = loadFont("RetroComputer.vlw");  // this font is bitmapped, and might have to be a multiple of 14 px?
   font8Bit2 = loadFont("pixelmix_smooth.vlw");  // this font is bitmapped, and might have to be a multiple of 6 px?
   Lvl = new Level();
 
-  sprEntry = new SpriteAnimated (n_TILE_SIZE, nLevelHeight-n_TILE_SIZE-73, 0, 0, 0, 1, "door.png", 0, 3, 0, 0, false, 4, 2, 3); //75 for height of the door 
-  sprExit = new SpriteAnimated (nLevelWidth-n_TILE_SIZE-84, nLevelHeight-n_TILE_SIZE-73, 0, 0, 0, 1, "door.png", 4, 7, 0, 0, false, 4, 2, 3); // 48 for width of the door
-  sprHero = new SpriteAnimated (n_TILE_SIZE*4, n_TILE_SIZE*7, 1.6, 0.6, 16, 0, "PixelCrab.png", 0, 0, 0, 6, false, 4, 1, 5); // to fix the lag had to change from 0.8 to 1.6, 0.3 to 0.6, 8 to 16 
+  sprEntry = new SpriteAnimated (TILE_SIZE, height-TILE_SIZE-73, 0, 0, 0, 1, "door.png", 0, 3, 0, 0, false, 4, 2, 3); //75 for height of the door 
+  sprExit = new SpriteAnimated (width-TILE_SIZE-84, height-TILE_SIZE-73, 0, 0, 0, 1, "door.png", 4, 7, 0, 0, false, 4, 2, 3); // 48 for width of the door
+  sprHero = new SpriteAnimated (TILE_SIZE*4, TILE_SIZE*7, 1.6, 0.6, 16, 0, "PixelCrab.png", 0, 0, 0, 6, false, 4, 1, 5); // to fix the lag had to change from 0.8 to 1.6, 0.3 to 0.6, 8 to 16 
 
   messageEye = new Messages (int(width/2), (height/2)-(height/4)+5, 0, 0, "eye");
-  messageLevelNum = new Messages (width-4*n_TILE_SIZE, height-n_TILE_SIZE+5, 4*n_TILE_SIZE-10, n_TILE_SIZE-10, "other");
+  messageLevelNum = new Messages (width-4*TILE_SIZE, height-TILE_SIZE+5, 4*TILE_SIZE-10, TILE_SIZE-10, "other");
 
-  timer = new Timer(n_TILE_SIZE/4, height-n_TILE_SIZE+5, 5*n_TILE_SIZE-20, n_TILE_SIZE-10, 1000); // input is in milliseconds 
+  timer = new Timer(TILE_SIZE/4, height-TILE_SIZE+5, 5*TILE_SIZE-20, TILE_SIZE-10, 1000); // input is in milliseconds 
   buttonTimer = new Timer(0, 0, 0, 0, 3000); // just choose 3000 as a random time, it is later set to the length of the audio
 
   menu = new Menu();
   backgroundParallax = new BackGround();
 
-  giveUpButton = new GiveUpButton(width/2-85, height-n_TILE_SIZE+3);
+  giveUpButton = new GiveUpButton(width/2-85, height-TILE_SIZE+3);
   minim = new Minim(this);
   soundJump = minim.loadSample("jump.wav");
   soundShoot = minim.loadSample("Laser Sound.mp3");
   soundHit = minim.loadSample("hit sound.mp3");
   soundGame = minim.loadFile("DontGiveUp.mp3");
   soundMenu = minim.loadFile("Beepify.mp3");
-  soundJump.setGain(9001); //OVER 9000!!!!!! ... even though the max is around 6....
-  soundShoot.setGain(9001); //OVER 9000!!!!!! ... even though the max is around 6....
-  soundHit.setGain(9001); //OVER 9000!!!!!! ... even though the max is around 6....
+  soundJump.setGain(9001);
+  soundShoot.setGain(9001);
+  soundHit.setGain(9001);
   arSoundMessage = new AudioSample[10]; 
   while (giveUpButton.nCount<=9) {
     arSoundMessage[giveUpButton.nCount] = minim.loadSample("soundButton"+str(int(giveUpButton.nCount+1))+".mp3");
-    arSoundMessage[giveUpButton.nCount].setGain(9001); //OVER 9000!!!!!! ... even though the max is around 6....
+    arSoundMessage[giveUpButton.nCount].setGain(9001);
     giveUpButton.nCount++;
   }
   giveUpButton.nCount=0;
@@ -104,19 +102,16 @@ void draw() {
   if (nScreen == 4) {
     if (!giveUpButton.bTimerStarted) {
       background(240);
-      pushMatrix();  
       updateCameraPosition();  
       backgroundParallax.update();
-      translate(-nXCamOffset, -nYCamOffset);//translate the origin by the cameraOffset variable to give a sidescrolling effect
       //println(giveUpButton.bTimerStarted); // used for debugging
       Lvl.createLevel();
       ptmxMap.draw(0, 0, 0); // this draws the tiles layer,  Visible property in Tiled is ignored when drawing individual layers.
+      ptmxMap.draw(3, 0, 0); // this draws the tiles layer,  Visible property in Tiled is ignored when drawing individual layers.
       sprEntry.display();
       sprExit.display();
       sprHero.update();
       messageEye.display();
-      popMatrix();
-
       messageLevelNum.display();
       timer.display();
     }
@@ -166,10 +161,7 @@ void keyPressed() {
   // settings
   else if (nScreen == 1) {
     menu.key();
-  } 
-  // names
-  else if (nScreen == 3) {
-  } 
+  }
   // game
   else if (nScreen == 4) {
     if (!giveUpButton.bTimerStarted) {
@@ -217,11 +209,6 @@ void keyReleased() { // smoother movement
  did add the scrolling along the Y axis.
  */
 void updateCameraPosition() {
-  int nRightEdge = nLevelWidth-width;  // (width of the level - the width of the screen output area)
-  /* the left side of the updated camera panel shouldn't go so much 
-   right that the "rightEdge" of the "camera" (window) is greater than nLevelWidth*/
-  int nTopEdge = nLevelHeight-height;
-
   nXCamOffset = round(sprHero.fX-width/2); // the camera offset = position of the player subtract half the width of the level to center the player in the window
   nYCamOffset = round(sprHero.fY-height/2); // the camera offset = position of the player subtract half the height of the level to center the player in the window
 
@@ -236,8 +223,8 @@ void updateCameraPosition() {
     }
   } 
 
-  nXCamOffset = constrain(nXCamOffset, 0, nRightEdge);
-  nYCamOffset = constrain(nYCamOffset, 0, nTopEdge);
+  nXCamOffset = constrain(nXCamOffset, 0, width);
+  nYCamOffset = constrain(nYCamOffset, 0, 100); // rando num
 } 
 // ============== IS HIT BUTTON =============================================
 boolean isHitButton(PImage img, float fX, float fY) {

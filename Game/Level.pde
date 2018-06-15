@@ -36,7 +36,7 @@ class Level {
     //println(ptmxMap.getTileSize());
     if (!bDrawn) {
       clearAllAL();
-      tiledObjects = ptmxMap.getObjects(3); // get all objects in a certain layer (in this case #2). returns as  a string dictionary (kind of like a hash map)
+      tiledObjects = ptmxMap.getObjects(3); // get all objects in a certain layer (in this case #3). returns as  a string dictionary (kind of like a hash map)
       // above line gets the wall/platformer layer
       if (tiledObjects==null) {
         println("no objects here bois");
@@ -267,9 +267,9 @@ class Level {
     nH1 = one.img.height;
     nW1 = one.img.width;
     if (
-      ((fX1+nW1 <= 0) ||(fX1 >= nLevelWidth) )
+      ((fX1+nW1 <= 0) ||(fX1 >= width) )
       ||
-      ((fY1+nH1 <= 0) ||(fY1 >= nLevelHeight) )
+      ((fY1+nH1 <= 0) ||(fY1 >= height) )
       ) {
       return (true) ;
     } else {
