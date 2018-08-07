@@ -1,3 +1,4 @@
+// messages for the cutscenes?
 class Messages {
   int nX, nY;
   String sMessageChoice, sLevel; //, sHitEntry, sHitExit;

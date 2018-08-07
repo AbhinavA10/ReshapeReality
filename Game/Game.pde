@@ -1,10 +1,11 @@
 // BY ABHINAV AGRAHARI. Started off with Don't Give up architecture, and then moved forward
-// find out how to get rid of gray background from tiled
+// find out how to get rid of gray background from tiled - will probably have to look at visibility when drawing individual layers
 // fix camera scrolling stuff
+// fix the hero falling off the floor after moving right
 /*
- NOTE: You will have to download the Minim library:
+ NOTE: You will have to download the Minim/PTMX library:
  At the top of the processing window, click on Sketch -> Import Library
- -> Add Library. Then search for Minim and click Install.
+ -> Add Library. Then search for Minim and PTMX and click Install.
  */
 import ddf.minim.*;
 import ptmx.*;
