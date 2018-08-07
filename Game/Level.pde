@@ -63,21 +63,7 @@ class Level {
   /*void addObjectToLevel() {
    (parseInt(tiledObjects[i].get("x")), parseInt(tiledObjects[i].get("y")), parseInt(tiledObjects[i].get("width")), parseInt(tiledObjects[i].get("height"))));
    
-   the stuff below will have to be accounted for somewhere else
-   int nId = jsonObjLevels.getInt("ID");
-   float fX = 0;//jsonObjLevels.getString("X");;
-   float fY = 0;//fDetermineCoord(sY, sYType);
-   float fAccel = jsonObjLevels.getFloat("Accel");
-   float fVelocity = jsonObjLevels.getFloat("Velocity");
-   int nVelocityLimit = jsonObjLevels.getInt("Velocity Limit");
-   int nDirec = jsonObjLevels.getInt("Direc");
-   String sImgName = jsonObjLevels.getString("Image Name");
-   int nMin = jsonObjLevels.getInt("Min");
-   int nMax = jsonObjLevels.getInt("Max");
-   int nGravityDelay = jsonObjLevels.getInt("Gravity Delay");
-   int nSpeed = jsonObjLevels.getInt("Speed");
-   boolean bFlipGravity  = jsonObjLevels.getBoolean("Flip Gravity");
-   int nTimer = jsonObjLevels.getInt("Timer");
+   the stuff below will have to be accounted for in the above function
    switch(nId) {
    case 1: 
    alPlat.add(new Sprite (fX, fY, fAccel, fVelocity, nVelocityLimit, nDirec, sImgName, nMin, nMax, nGravityDelay, nSpeed, bFlipGravity));
