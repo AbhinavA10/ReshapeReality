@@ -1,4 +1,4 @@
-// need timer for shooters
+// need timer for enemy shooters (delays)
 class Timer {
   int nTimerLength;
   int nTimeAtTimerStart;     
