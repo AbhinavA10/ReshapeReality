@@ -1,7 +1,5 @@
 // BY ABHINAV AGRAHARI. Started off with Don't Give up architecture, and then moved forward
-// find out how to get rid of gray background from tiled - will probably have to look at visibility when drawing individual layers
-// fix camera scrolling stuff
-// fix the hero falling off the floor after moving right
+// fix camera scrolling stuff?
 /*
  NOTE: You will have to download the Minim/PTMX library:
  At the top of the processing window, click on Sketch -> Import Library
@@ -107,8 +105,8 @@ void draw() {
       backgroundParallax.update();
       //println(giveUpButton.bTimerStarted); // used for debugging
       Lvl.createLevel();
-      ptmxMap.draw(0, 0, 0); // this draws the tiles layer,  Visible property in Tiled is ignored when drawing individual layers.
-      ptmxMap.draw(3, 0, 0); // this draws the tiles layer,  Visible property in Tiled is ignored when drawing individual layers.
+      ptmxMap.draw(0, 0, 0); // draws the tiled layer,  Visible property in Tiled is ignored when drawing individual layers.
+      // ptmxMap.draw(3, 0, 0); // drawing object layer is only good for debugging -- black = object, gray = empty space. 
       sprEntry.display();
       sprExit.display();
       sprHero.update();
