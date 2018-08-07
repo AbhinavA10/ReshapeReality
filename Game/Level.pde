@@ -196,8 +196,8 @@ class Level {
     fY2 = two.fY;
     nH1 = one.img.height;
     nW1 = one.img.width;
-    nH2 = two.nWidth;
-    nW2 = two.nHeight;
+    nH2 = two.nHeight;
+    nW2 = two.nWidth;
     if (
       ( ( (fX1 <= fX2) && (fX1+nW1 >= fX2) ) ||
       ( (fX1 >= fX2) && (fX1 <= fX2+nW2) ) )
