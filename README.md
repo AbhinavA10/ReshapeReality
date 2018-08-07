@@ -1,8 +1,6 @@
 # ReshapeReality
 
 ## To do (Current):
-
-- implement tiled collisions into game
 - implement rectWindow into game
 - collision of sprites with edge of visible window
 - make it so that when character jumps off walls, he jumps away from walls instead of just up. (Make it like Metroid)

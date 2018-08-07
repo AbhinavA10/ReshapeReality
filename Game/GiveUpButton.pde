@@ -1,4 +1,4 @@
-//use giveupbutton as cutscene thing
+//use giveupbutton class as cutscene class instead
 class GiveUpButton {
   ArrayList<PImage> alImgMessages = new ArrayList<PImage>(); // all of the images.
   PImage imgButtonDisplayed, imgButtonNormal, imgButtonHover;
