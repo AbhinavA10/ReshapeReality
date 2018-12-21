@@ -1,6 +1,6 @@
 //https://stackoverflow.com/questions/21534545/draw-opposite-of-shape-in-papplet
 //https://funprogramming.org/143-Using-PGraphics-as-layers-in-Processing.html
-// Move checkContinous to other parts of the code
+
 PImage imgBg;
 
 int nPlayerSize=20;
@@ -26,7 +26,7 @@ void draw() {
   background(#215018); // portion of the mask that is blocked out (non-visible part of the game)
   //mask image
   imgBg.mask(windowmask.mask);
-  windowmask.rectWindowMask();
+  windowmask.applyMask();
   //dispay it 
   image(imgBg, 0, 0);
   player.show();

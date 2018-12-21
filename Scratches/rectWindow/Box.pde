@@ -24,5 +24,7 @@ class Box {
     if (keyCode == LEFT) {
       nX-=5;
     }
+    if (nY<=windowmask.nWindowY) nY = windowmask.nWindowY;
+    if (nX <= windowmask.nWindowX) nX = windowmask.nWindowX;
   }
 }
