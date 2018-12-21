@@ -2,6 +2,7 @@ class WindowMask {
   int nWindowX=0, nWindowY=0;
   PGraphics mask;
   int nSizeBoxX=200, nSizeBoxY=200;
+  int minSizeX = 200, minSizeY=200;
   boolean[] edgeLocked = new boolean [4]; // UDLR, 0123.
   WindowMask() {
     mask = createGraphics(width, height);
@@ -30,7 +31,7 @@ class WindowMask {
     }
   }
   void continousWindow() {
-
+// right and down move when you move towards them even though they are locked
     // fix down
     if (keyCode == UP) {
       if (edgeLocked[EDGE_UP]) {
@@ -124,11 +125,11 @@ class WindowMask {
         }
       }
     }
-    if (nSizeBoxX<=0) nSizeBoxX =0;
-    if (nSizeBoxY<=0) nSizeBoxY =0;
+    if (nSizeBoxX<=minSizeX) nSizeBoxX =minSizeX;
+    if (nSizeBoxY<=minSizeY) nSizeBoxY =minSizeY;
   }
 
-  void rectWindowMask() {
+  void applyMask() {
     nXBottomRight = nWindowX+nSizeBoxX;
     nYBottomRight=nWindowY+nSizeBoxY;
     mask.beginDraw();
@@ -137,7 +138,6 @@ class WindowMask {
     mask.fill(255);
     mask.rect(nWindowX, nWindowY, nSizeBoxX, nSizeBoxY);
     mask.endDraw();
-
     println("      TOPLeft ("+ nWindowX+", "+ nWindowY+")       BottomRight ("+ nXBottomRight+", "+ nYBottomRight+")");
     print("   UP:"+edgeLocked[EDGE_UP]+"   DOWN:"+edgeLocked[EDGE_DOWN]+"  LEFT:"+edgeLocked[EDGE_LEFT]+"   RIGHT:"+edgeLocked[EDGE_RIGHT]);
     //println states of locked edges
