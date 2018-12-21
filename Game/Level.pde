@@ -36,6 +36,7 @@ class Level {
     //println(ptmxMap.getTileSize());
     if (!bDrawn) {
       clearAllAL();
+      loadPtmxlevel(arSFileNames[nLevel-1]);
       tiledObjects = ptmxMap.getObjects(3); // get all objects in a certain layer (in this case #3). returns as  a string dictionary (kind of like a hash map)
       // above line gets the wall/platformer layer
       if (tiledObjects==null) {

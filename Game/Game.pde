@@ -249,3 +249,9 @@ void stop() {
   minim.stop();
   super.stop();
 }
+
+void loadPtmxlevel(String levelName) {
+  ptmxMap = new Ptmx(this, levelName);
+  ptmxMap.setDrawMode(CORNER);   // origin of each thing is in top left corner like normal
+  ptmxMap.setPositionMode("CANVAS"); // all position stuff will be in pixel distances
+}
