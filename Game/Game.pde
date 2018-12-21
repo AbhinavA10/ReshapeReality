@@ -48,9 +48,6 @@ void setup() {
   frameRate(30); // to fix the lag
   background(20);
   cursor(WAIT);
-  ptmxMap = new Ptmx(this, "Level1.tmx");
-  ptmxMap.setDrawMode(CORNER);   // origin of each thing is in top left corner like normal
-  ptmxMap.setPositionMode("CANVAS"); // all position stuff will be in pixel distances
 
   size(1024, 640); //fix below line
 
@@ -76,8 +73,9 @@ void setup() {
   soundJump = minim.loadSample("jump.wav");
   soundShoot = minim.loadSample("Laser Sound.mp3");
   soundHit = minim.loadSample("hit sound.mp3");
-  soundGame = minim.loadFile("DontGiveUp.mp3");
-  soundMenu = minim.loadFile("Beepify.mp3");
+  soundGame = minim.loadFile("Inception Soundtrack-Dream is Collapsing Hans Zimmer.mp3");
+  soundMenu = minim.loadFile("Hans Zimmer - Time Inception.mp3");
+  soundMenu.setVolume(1);
   soundJump.setGain(9001);
   soundShoot.setGain(9001);
   soundHit.setGain(9001);
@@ -247,4 +245,10 @@ void stop() {
   }
   minim.stop();
   super.stop();
+}
+
+void loadPtmxlevel(String levelName) {
+  ptmxMap = new Ptmx(this, levelName);
+  ptmxMap.setDrawMode(CORNER);   // origin of each thing is in top left corner like normal
+  ptmxMap.setPositionMode("CANVAS"); // all position stuff will be in pixel distances
 }
