@@ -48,9 +48,6 @@ void setup() {
   frameRate(30); // to fix the lag
   background(20);
   cursor(WAIT);
-  ptmxMap = new Ptmx(this, "Level1.tmx");
-  ptmxMap.setDrawMode(CORNER);   // origin of each thing is in top left corner like normal
-  ptmxMap.setPositionMode("CANVAS"); // all position stuff will be in pixel distances
 
   size(1024, 640); //fix below line
 
