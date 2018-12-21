@@ -1,5 +1,5 @@
 // BY ABHINAV AGRAHARI. Started off with Don't Give up architecture, and then moved forward
-// fix camera scrolling stuff?
+// start implementing rectWindow
 /*
  NOTE: You will have to download the Minim/PTMX library:
  At the top of the processing window, click on Sketch -> Import Library

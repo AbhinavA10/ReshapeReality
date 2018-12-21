@@ -1,9 +1,8 @@
-# ReshapeReality
+ # ReshapeReality
 
 ## To do (Current):
 - implement rectWindow into game
-- collision of sprites with edge of visible window
-- make it so that when character jumps off walls, he jumps away from walls instead of just up. (Make it like Metroid)
+	- after locking, the player doesn't recenter correctly after he reaches the edge of the window (possibly?)
 
 ## To do (Way Later):
 - Discrete collision detection method
