@@ -76,8 +76,9 @@ void setup() {
   soundJump = minim.loadSample("jump.wav");
   soundShoot = minim.loadSample("Laser Sound.mp3");
   soundHit = minim.loadSample("hit sound.mp3");
-  soundGame = minim.loadFile("DontGiveUp.mp3");
-  soundMenu = minim.loadFile("Beepify.mp3");
+  soundGame = minim.loadFile("Inception Soundtrack-Dream is Collapsing Hans Zimmer.mp3");
+  soundMenu = minim.loadFile("Hans Zimmer - Time Inception.mp3");
+  soundMenu.setVolume(1);
   soundJump.setGain(9001);
   soundShoot.setGain(9001);
   soundHit.setGain(9001);
