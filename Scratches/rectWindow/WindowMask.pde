@@ -1,22 +1,60 @@
 class WindowMask {
   int nWindowX=0, nWindowY=0;
   int nXBottomRight, nYBottomRight;
-  PGraphics mask;
+  PGraphics imgMask;
   int nSizeBoxX=200, nSizeBoxY=200;
   int minSizeX = 200, minSizeY=200;
   int dist = 200/2-10;
   private boolean[] edgeLocked = new boolean [4]; // UDLR, 0123.
   // ========================================================== CONSTRUCTOR ==========================================================================
   WindowMask() {
-    mask = createGraphics(width, height);
-    mask.beginDraw();
-    mask.background(255);
-    mask.noStroke();
-    mask.fill(0);
-    mask.rect(nWindowX, nWindowY, nSizeBoxX, nSizeBoxY);
-    mask.endDraw();
+    imgMask = createGraphics(width, height);
+    imgMask.beginDraw();
+    imgMask.background(255);
+    imgMask.noStroke();
+    imgMask.fill(0);
+    imgMask.rect(nWindowX, nWindowY, nSizeBoxX, nSizeBoxY);
+    imgMask.endDraw();
     nWindowX=(player.nX+player.nSize/2)-nSizeBoxX/2;
     nWindowY=(player.nY+player.nSize/2)-nSizeBoxY/2;
+  }
+
+  // ========================================================== DRAW IMG ==========================================================================
+  // the masking image has one white square, and everything else fully black
+  void updateImgMask() {
+    nXBottomRight = nWindowX+nSizeBoxX;
+    nYBottomRight=nWindowY+nSizeBoxY;
+    imgMask.beginDraw();
+    imgMask.noStroke();
+    imgMask.background(0, 0, 0, 0); // refersh the image by drawing a transparent background
+
+    imgMask.fill(#53485F);
+    imgMask.rect(0, 0, nWindowX, height);
+    imgMask.rect(nWindowX+nSizeBoxX, 0, width, height);
+    imgMask.rect(nWindowX, 0, nWindowX+nSizeBoxX, nWindowY);
+    imgMask.rect(nWindowX, nWindowY+nSizeBoxY, nWindowX+nSizeBoxX, height);
+
+
+    imgMask.fill(255, 255, 255, 0); // the square will be filled white    
+    imgMask.rect(nWindowX, nWindowY, nSizeBoxX, nSizeBoxY);
+    /*
+    
+     The mask will look like the following ----- = means black space, | is to represent a new rectangle from above
+     =======|=======|========
+     =======|=======|========
+     =======|=======|========
+     =======|       |========
+     =======|       |========
+     =======|       |========
+     =======|=======|========
+     =======|=======|========
+     =======|=======|========     
+     */
+
+    imgMask.endDraw();
+    println("      TOPLeft ("+ nWindowX+", "+ nWindowY+")       BottomRight ("+ nXBottomRight+", "+ nYBottomRight+")");
+    print("   UP:"+edgeLocked[EDGE_UP]+"   DOWN:"+edgeLocked[EDGE_DOWN]+"  LEFT:"+edgeLocked[EDGE_LEFT]+"   RIGHT:"+edgeLocked[EDGE_RIGHT]);
+    //println states of locked edges
   }
   // ========================================================== KEY PRESS ==========================================================================
   void keyPress() {
@@ -132,24 +170,6 @@ class WindowMask {
     }
     if (nSizeBoxX<=minSizeX) nSizeBoxX =minSizeX; // limiting the size of the box to its min
     if (nSizeBoxY<=minSizeY) nSizeBoxY =minSizeY;
-  }
-  // ========================================================== APPLY MASK ==========================================================================
-  void applyMask() {
-    nXBottomRight = nWindowX+nSizeBoxX;
-    nYBottomRight=nWindowY+nSizeBoxY;
-    mask.beginDraw();
-    mask.background(0);
-    mask.noStroke();
-    mask.fill(255);
-    mask.rect(nWindowX, nWindowY, nSizeBoxX, nSizeBoxY);
-    mask.endDraw();
-    println("      TOPLeft ("+ nWindowX+", "+ nWindowY+")       BottomRight ("+ nXBottomRight+", "+ nYBottomRight+")");
-    print("   UP:"+edgeLocked[EDGE_UP]+"   DOWN:"+edgeLocked[EDGE_DOWN]+"  LEFT:"+edgeLocked[EDGE_LEFT]+"   RIGHT:"+edgeLocked[EDGE_RIGHT]);
-    //println states of locked edges
-  }
-  // ========================================================== GET CENTER POINT ==========================================================================
-  PVector getCenterPoint() {
-    return new PVector((nWindowX+nSizeBoxX/2), (nWindowY+nSizeBoxY/2) );
   }
   // ========================================================== GET DISTANCE BETWEEN EDGES ==========================================================================
   int getDistBWEdges(String edge) {
