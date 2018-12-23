@@ -1,3 +1,4 @@
+
 class Sprite {
   String sImgName;
   float fX, fY, fYstart, fXstart;
@@ -23,6 +24,7 @@ class Sprite {
   boolean bActivateGravity=false;
   int nTimeAtTimerStart, nTimeSinceTimerStarted;
   int nGravityDelay;
+  int nSpawnX, nSpawnY; 
 
   PVector vDirBullet;
   // ============== CONSTRUCTOR =============================================
@@ -119,12 +121,13 @@ class Sprite {
     }
   }
   // ============== RESPAWN =============================================
+
   void respawn() {
     background(20);
     bHasTimerStarted=false; 
     nDeathCount++;
     refreshCoord();
-    vPos.set(TILE_SIZE*4, TILE_SIZE*7);
+    vPos.set(nSpawnX, nSpawnY);
     fVelocity = 0;
     nDirec=0;
     nJumpCount=0;

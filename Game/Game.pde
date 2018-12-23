@@ -57,7 +57,7 @@ void setup() {
 
   sprEntry = new SpriteAnimated (TILE_SIZE, height-TILE_SIZE-73, 0, 0, 0, 1, "door.png", 0, 3, 0, 0, false, 4, 2, 3); //75 for height of the door 
   sprExit = new SpriteAnimated (width-TILE_SIZE-84, height-TILE_SIZE-73, 0, 0, 0, 1, "door.png", 4, 7, 0, 0, false, 4, 2, 3); // 48 for width of the door
-  sprHero = new SpriteAnimated (TILE_SIZE*4, TILE_SIZE*7, 1.6, 0.6, 16, 0, "PixelCrab.png", 0, 0, 0, 6, false, 4, 1, 5); // to fix the lag had to change from 0.8 to 1.6, 0.3 to 0.6, 8 to 16 
+  sprHero = new SpriteAnimated (TILE_SIZE*4, TILE_SIZE*3, 1.6, 0.6, 16, 0, "PixelCrab.png", 0, 0, 0, 6, false, 4, 1, 5); // to fix the lag had to change from 0.8 to 1.6, 0.3 to 0.6, 8 to 16 
 
   messageEye = new Messages (int(width/2), (height/2)-(height/4)+5, 0, 0, "eye");
   messageLevelNum = new Messages (width-4*TILE_SIZE, height-TILE_SIZE+5, 4*TILE_SIZE-10, TILE_SIZE-10, "other");

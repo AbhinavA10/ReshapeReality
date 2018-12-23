@@ -52,6 +52,27 @@ class Level {
           alPlat.add(new Sprite (nX, nY, nWidth, nHeight, 0, 0, 0, 0, 0));
         }
       }
+      tiledObjects = ptmxMap.getObjects(1); //get door start object
+
+      println(tiledObjects[0]);
+      int nX = parseInt(tiledObjects[0].get("x"));
+      int nY = parseInt(tiledObjects[0].get("y"));
+      sprEntry.vPos.x=nX; //postion of the door=nX
+      sprEntry.vPos.y=nY; //postion of the door=nY
+
+      sprHero.vPos.set(nX, nY);//the hero spawns whereever the entry door is due to nX and nY 
+      //to make sure this comes before the advancedlevel() function which makes the next cycle
+      // changes spawn positions
+
+      tiledObjects = ptmxMap.getObjects(2); //get door end object
+      println(tiledObjects[0]);
+      int nExitX = parseInt(tiledObjects[0].get("x"));
+      int nExitY = parseInt(tiledObjects[0].get("y"));
+      sprExit.vPos.set(nExitX, nExitY); //postion of the door, from the object
+      
+      sprEntry.refreshCoord(); // is-near uses fX, so we also need to update that.
+      sprExit.refreshCoord();
+
       bDrawn = true;
     }
     if (nLevel==14) {
