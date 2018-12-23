@@ -114,7 +114,7 @@ class Sprite {
     Lvl.bDrawn=false; 
     bFlipGravity=false;
     nLevel++;
-    windowmask.resetWindow();
+    viewwindow.resetWindow();
     if (nLevel==nLastLevel+1) {
       exit();
     }
@@ -132,7 +132,7 @@ class Sprite {
     Lvl.alBullets.clear();   
     refreshCoord();
 
-    windowmask.resetWindow();
+    viewwindow.resetWindow();
   }
   // ============== DISPLAY =============================================
   void display() {

@@ -92,9 +92,22 @@ class Level {
     for (Sprite nI : alPlat) {
       if (isHit(sprHero, nI)) {
         sprHero.fVelocity = 0; // reset velocity
-        sprHero.nJumpCount=0; // if you hit the top or bottom of the box, it resets the jump amount
+        if (sprHero.fY<nI.fY) sprHero.nJumpCount=0; // if you hit the top or bottom of the box, it resets the jump amount // this might help with the sticky jump thing
         sprHero.vPos.y = sprHero.fYstart;
       }
+    }
+
+    if (isHit(sprHero, viewwindow.spriteEdges[2])) {
+      sprHero.fVelocity = 0; // reset velocity
+      if (sprHero.fY<viewwindow.spriteEdges[2].fY) sprHero.nJumpCount=0; // added check so jump count only resets if you hit the top of a box
+      sprHero.vPos.y = sprHero.fYstart;
+      println("hit left window");
+    }
+    if (isHit(sprHero, viewwindow.spriteEdges[3])) {
+      sprHero.fVelocity = 0; // reset velocity
+      if (sprHero.fY<viewwindow.spriteEdges[3].fY) sprHero.nJumpCount=0; // if you hit the top or bottom of the box, it resets the jump amount // this might help with the sticky jump thing
+      sprHero.vPos.y = sprHero.fYstart;
+      println("hit right window");
     }
   }
   // ============== CHECK-LEFT-RIGHT =============================================
@@ -103,6 +116,15 @@ class Level {
       if (isHit(sprHero, nI)) {
         sprHero.vPos.x = sprHero.fXstart;
       }
+    }
+
+    if (isHit(sprHero, viewwindow.spriteEdges[0])) {
+      sprHero.vPos.x = sprHero.fXstart;
+      println("hit left window");
+    }
+    if (isHit(sprHero, viewwindow.spriteEdges[1])) {
+      sprHero.vPos.x = sprHero.fXstart;
+      println("hit right window");
     }
   }
   // ============== CHECK-SPIKES =============================================

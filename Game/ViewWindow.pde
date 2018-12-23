@@ -1,4 +1,4 @@
-class WindowMask {
+class ViewWindow {
   float fWindowX=0, fWindowY=0;
   float fXBottomRight, fYBottomRight;
   PGraphics imgMask;
@@ -11,8 +11,9 @@ class WindowMask {
   final float MIN_DIST_BW_EDGES = 200/2-20;
   static final int EDGE_UP = 0, EDGE_DOWN =1, EDGE_LEFT =2, EDGE_RIGHT =3; // for edge Locked array
   static final int TOP_LEFT_CORNER =0, BOTT_RIGHT_CORNER =1; // for vLockPos array
+  Sprite[] spriteEdges = new Sprite[4]; // door
   // ========================================================== CONSTRUCTOR ==========================================================================
-  WindowMask() {
+  ViewWindow() {
     imgMask = createGraphics(width, height);
     imgMask.beginDraw();
     imgMask.background(255);
@@ -24,85 +25,27 @@ class WindowMask {
     fWindowY=(sprHero.fY+sprHero.img.height/2)-fSizeBoxY/2;
     vLockPos[TOP_LEFT_CORNER] = new PVector(0, 0);
     vLockPos[EDGE_DOWN] = new PVector(0, 0);
+    //(float fTempX, float fTempY, int n_Width, int n_Height, float fTempAccel, float fTempVelocity, int nTempVelocityLimit, int nTempMin, int nTempMax) {
+    spriteEdges[0] = new Sprite (fWindowX, fWindowY, (int)MIN_SIZE_X, (int)MIN_SIZE_Y, 0, 0, 0, 0, 0);
+    spriteEdges[1] = new Sprite (fWindowX, fWindowY, (int)MIN_SIZE_X, (int)MIN_SIZE_Y, 0, 0, 0, 0, 0);
+    spriteEdges[2] = new Sprite (fWindowX, fWindowY, (int)MIN_SIZE_X, (int)MIN_SIZE_Y, 0, 0, 0, 0, 0);
+    spriteEdges[3] = new Sprite (fWindowX, fWindowY, (int)MIN_SIZE_X, (int)MIN_SIZE_Y, 0, 0, 0, 0, 0);
   }
-
-  // ========================================================== DRAW IMG ==========================================================================
-  // the masking image has one transparent square, and everything else fully opaque black
-  void updateImgMask() {
+  // ========================================================== UPDATE VIEW WINDOW ==========================================================================
+  void updateViewWindow() {
     fXBottomRight = fWindowX+fSizeBoxX;
     fYBottomRight=fWindowY+fSizeBoxY;
-    continousWindow();
-    imgMask.beginDraw();
-    imgMask.noStroke();
-    imgMask.background(0, 0, 0, 0); // refersh the image by drawing a transparent background
-
-    imgMask.fill(10); // black everything else
-    imgMask.rect(0, 0, fWindowX, height);
-    imgMask.rect(fWindowX+fSizeBoxX, 0, width, height);
-    imgMask.rect(fWindowX, 0, fWindowX+fSizeBoxX, fWindowY);
-    imgMask.rect(fWindowX, fWindowY+fSizeBoxY, fWindowX+fSizeBoxX, height);
-
-
-    imgMask.fill(255, 255, 255, 0); // the square will be filled white    
-    imgMask.rect(fWindowX, fWindowY, fSizeBoxX, fSizeBoxY);
-    /*
-    
-     The mask will look like the following ----- = means black space, | is to represent a new rectangle from above
-     =======|=======|========
-     =======|=======|========
-     =======|=======|========
-     =======|       |========
-     =======|       |========
-     =======|       |========
-     =======|=======|========
-     =======|=======|========
-     =======|=======|========     
-     */
-
-    imgMask.endDraw();
-    println("      TOPLeft ("+ fWindowX+", "+ fWindowY+")       BottomRight ("+ fXBottomRight+", "+ fYBottomRight+")");
-    print("   UP:"+edgeLocked[EDGE_UP]+"   DOWN:"+edgeLocked[EDGE_DOWN]+"  LEFT:"+edgeLocked[EDGE_LEFT]+"   RIGHT:"+edgeLocked[EDGE_RIGHT]);
-    //println states of locked edges
+    updateWindowLocation();
+    updateWindowSprites();
+    updateImg();
   }
-  // ========================================================== KEY PRESS ==========================================================================
-  void keyPress() {
-    if (key == 'w' || key == 'W') { 
-      edgeLocked[EDGE_UP] = true;
-      vLockPos[TOP_LEFT_CORNER].x = fWindowX;
-      vLockPos[TOP_LEFT_CORNER].y = fWindowY;
-      vLockPos[BOTT_RIGHT_CORNER].x = fWindowX+MIN_SIZE_X;
-      vLockPos[BOTT_RIGHT_CORNER].y = fWindowY+MIN_SIZE_Y;
-    }
-    if (key == 's' || key == 'S') {
-      edgeLocked[EDGE_DOWN] = true;
-      vLockPos[TOP_LEFT_CORNER].x = fWindowX;
-      vLockPos[TOP_LEFT_CORNER].y = fWindowY;
-      vLockPos[BOTT_RIGHT_CORNER].x = fWindowX+MIN_SIZE_X;
-      vLockPos[BOTT_RIGHT_CORNER].y = fWindowY+MIN_SIZE_Y;
-    }
-    if (key == 'a' || key == 'A') {
-      edgeLocked[EDGE_LEFT] = true;
-      vLockPos[TOP_LEFT_CORNER].x = fWindowX;
-      vLockPos[TOP_LEFT_CORNER].y = fWindowY;
-      vLockPos[BOTT_RIGHT_CORNER].x = fWindowX+MIN_SIZE_X;
-      vLockPos[BOTT_RIGHT_CORNER].y = fWindowY+MIN_SIZE_Y;
-    }
-    if (key == 'd' || key == 'D') {
-      edgeLocked[EDGE_RIGHT] = true;
-      vLockPos[TOP_LEFT_CORNER].x = fWindowX;
-      vLockPos[TOP_LEFT_CORNER].y = fWindowY;
-      vLockPos[BOTT_RIGHT_CORNER].x = fWindowX+MIN_SIZE_X;
-      vLockPos[BOTT_RIGHT_CORNER].y = fWindowY+MIN_SIZE_Y;
-    }
-    if (key=='r'||key=='R') {
-      resetWindow();
-    }
-  }
+
+
   // ========================================================== CONTINOUS WINDOW ==========================================================================
 
   // add checks at bounds of screen
 
-  void continousWindow() {
+  void updateWindowLocation() {
 
     sprHero.refreshCoord();
     // need to lock such that ex. when moving right and left is locked, dont increase view of right till player is past half of window
@@ -164,6 +107,104 @@ class WindowMask {
     if (fSizeBoxX<=MIN_SIZE_X) fSizeBoxX =MIN_SIZE_X; // limiting the size of the box to its min
     if (fSizeBoxY<=MIN_SIZE_Y) fSizeBoxY =MIN_SIZE_Y;
   }
+
+  // ========================================================== UPDATE WINDOW SPRITES ==========================================================================
+  void updateWindowSprites() {
+    int thickness = 20;
+    spriteEdges[0] = new Sprite (fWindowX-thickness, 0, thickness, height, 0, 0, 0, 0, 0);
+    spriteEdges[1] = new Sprite (fWindowX+fSizeBoxX, 0, thickness, height, 0, 0, 0, 0, 0);
+    spriteEdges[2] = new Sprite (fWindowX, fWindowY-thickness, (int)fSizeBoxX, thickness, 0, 0, 0, 0, 0);
+    spriteEdges[3] = new Sprite (fWindowX, fWindowY+fSizeBoxY, (int)fSizeBoxX, thickness, 0, 0, 0, 0, 0);
+    /*
+    
+     1 imgMask.rect(0, 0, fWindowX, height);
+     2 imgMask.rect(fWindowX+fSizeBoxX, 0, width, height);
+     3 imgMask.rect(fWindowX, 0, fWindowX+fSizeBoxX, fWindowY);
+     4 imgMask.rect(fWindowX, fWindowY+fSizeBoxY, fWindowX+fSizeBoxX, height);
+     
+     =======|=======|========
+     =======|===3===|========
+     =======|=======|========
+     =======|       |========
+     ===1===|       |====2===
+     =======|       |========
+     =======|=======|========
+     =======|==4====|========
+     =======|=======|======== 
+     
+     */
+  }
+
+  // ========================================================== UPDATE IMG ==========================================================================
+  // the masking image has one transparent square, and everything else fully opaque black
+  void updateImg() {
+    imgMask.beginDraw();
+    imgMask.noStroke();
+    imgMask.background(0, 0, 0, 0); // refersh the image by drawing a transparent background
+    imgMask.fill(10); // black everything else
+    imgMask.rect(0, 0, fWindowX, height);
+    imgMask.rect(fWindowX+fSizeBoxX, 0, width, height);
+    imgMask.rect(fWindowX, 0, fWindowX+fSizeBoxX, fWindowY);
+    imgMask.rect(fWindowX, fWindowY+fSizeBoxY, fWindowX+fSizeBoxX, height);
+    imgMask.fill(255, 255, 255, 0); // the square will be filled white    
+    imgMask.rect(fWindowX, fWindowY, fSizeBoxX, fSizeBoxY);
+    imgMask.endDraw();
+
+    /*  
+     The mask will look like the following ----- = means black space, | is to represent a new rectangle from above
+     =======|=======|========
+     =======|=======|========
+     =======|=======|========
+     =======|       |========
+     =======|       |========
+     =======|       |========
+     =======|=======|========
+     =======|=======|========
+     =======|=======|========     
+     */
+    println("      TOPLeft ("+ fWindowX+", "+ fWindowY+")       BottomRight ("+ fXBottomRight+", "+ fYBottomRight+")");
+    print("   UP:"+edgeLocked[EDGE_UP]+"   DOWN:"+edgeLocked[EDGE_DOWN]+"  LEFT:"+edgeLocked[EDGE_LEFT]+"   RIGHT:"+edgeLocked[EDGE_RIGHT]);
+    //println states of locked edges
+  }
+  // ========================================================== KEY PRESS ==========================================================================
+  void keyPress() {
+    if (key == 'w' || key == 'W') { 
+      edgeLocked[EDGE_UP] = true;
+      vLockPos[TOP_LEFT_CORNER].x = fWindowX;
+      vLockPos[TOP_LEFT_CORNER].y = fWindowY;
+      vLockPos[BOTT_RIGHT_CORNER].x = fWindowX+MIN_SIZE_X;
+      vLockPos[BOTT_RIGHT_CORNER].y = fWindowY+MIN_SIZE_Y;
+    }
+    if (key == 's' || key == 'S') {
+      edgeLocked[EDGE_DOWN] = true;
+      vLockPos[TOP_LEFT_CORNER].x = fWindowX;
+      vLockPos[TOP_LEFT_CORNER].y = fWindowY;
+      vLockPos[BOTT_RIGHT_CORNER].x = fWindowX+MIN_SIZE_X;
+      vLockPos[BOTT_RIGHT_CORNER].y = fWindowY+MIN_SIZE_Y;
+    }
+    if (key == 'a' || key == 'A') {
+      edgeLocked[EDGE_LEFT] = true;
+      vLockPos[TOP_LEFT_CORNER].x = fWindowX;
+      vLockPos[TOP_LEFT_CORNER].y = fWindowY;
+      vLockPos[BOTT_RIGHT_CORNER].x = fWindowX+MIN_SIZE_X;
+      vLockPos[BOTT_RIGHT_CORNER].y = fWindowY+MIN_SIZE_Y;
+    }
+    if (key == 'd' || key == 'D') {
+      edgeLocked[EDGE_RIGHT] = true;
+      vLockPos[TOP_LEFT_CORNER].x = fWindowX;
+      vLockPos[TOP_LEFT_CORNER].y = fWindowY;
+      vLockPos[BOTT_RIGHT_CORNER].x = fWindowX+MIN_SIZE_X;
+      vLockPos[BOTT_RIGHT_CORNER].y = fWindowY+MIN_SIZE_Y;
+    }
+    if (key=='r'||key=='R') {
+      resetWindow();
+    }
+  }
+  // ========================================================== DISPLAY ==========================================================================
+  void display() {
+    image(viewwindow.imgMask, 0, 0); // draw the layer that has transparency in center
+  }
+
   // ========================================================== GET DISTANCE BETWEEN EDGES ==========================================================================
   float getDistBWEdges(String edge) {
     float dist = 0;

@@ -1,8 +1,5 @@
 // BY ABHINAV AGRAHARI and ASHISH AGRAHARI
 // Started off with Don't Give up architecture, and then moved forward
-// add collisions of sprite-hero with window
-// rename windowmask to accurately viewWindow
-
 
 /*
  NOTE: You will have to download the Minim/PTMX library:
@@ -47,7 +44,7 @@ Level Lvl;
 JSONArray jsonArLevels;
 JSONObject jsonObjLevels;
 Ptmx ptmxMap;
-WindowMask windowmask;
+ViewWindow viewwindow;
 // ============== SETUP =============================================
 void setup() {
   frameRate(30); // to fix the lag
@@ -93,7 +90,7 @@ void setup() {
     giveUpButton.nCount++;
   }
   giveUpButton.nCount=0;
-  windowmask = new WindowMask();
+  viewwindow = new ViewWindow();
   soundMenu.loop();
 }
 // ============== DRAW =============================================
@@ -117,11 +114,8 @@ void draw() {
       sprHero.update();
       messageEye.display();
 
-      if (keyPressed) {
-        windowmask.continousWindow();
-      }
-      windowmask.updateImgMask();   // update the masking image
-      image(windowmask.imgMask, 0, 0); // draw the layer that has transparency in center
+      viewwindow.updateViewWindow();   // update the masking image
+      viewwindow.display();
 
 
       //messageLevelNum.display();
@@ -177,29 +171,31 @@ void keyPressed() {
   // game
   else if (nScreen == 4) {
     if (!giveUpButton.bTimerStarted) {
-      if (key == 'w' || key == 'W'||keyCode==UP) {
+      if (keyCode==UP) {
         sprHero.jump();
         sprHero.nJumpCount++;
       }
-      if (key == 'd' || key == 'D'||keyCode==RIGHT) {
+      if (keyCode==RIGHT) {
         sprHero.nDirec=1; //right
         sprHero.nLastDirec=1; // needed for animations to face the same way after stopping
       }
-      if (key == 'a' || key == 'A'||keyCode==LEFT) {
+      if (keyCode==LEFT) {
         sprHero.nDirec=2; //left'
         sprHero.nLastDirec=2; // needed for animations to face the same way after stopping
       }
+      /*
       if (key=='g'||key=='G') {
-        bGKey=true;
-      }
-      if (keyCode==CONTROL) {
-        bCTRLKey=true;
-      }
-      if (bCTRLKey && bGKey) {
-        giveUpButton.giveUpButton();
-      }
+       bGKey=true;
+       }
+       if (keyCode==CONTROL) {
+       bCTRLKey=true;
+       }
+       if (bCTRLKey && bGKey) {
+       giveUpButton.giveUpButton();
+       }
+       */
     }
-    windowmask.keyPress(); // for the locking and unlocking
+    viewwindow.keyPress(); // for the locking and unlocking
   }
 }
 // ============== KEY RELEASED =============================================
