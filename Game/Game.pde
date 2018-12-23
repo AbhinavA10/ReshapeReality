@@ -1,5 +1,9 @@
-// BY ABHINAV AGRAHARI. Started off with Don't Give up architecture, and then moved forward
-// start implementing rectWindow
+// BY ABHINAV AGRAHARI and ASHISH AGRAHARI
+// Started off with Don't Give up architecture, and then moved forward
+// add collisions of sprite-hero with window
+// rename windowmask to accurately viewWindow
+
+
 /*
  NOTE: You will have to download the Minim/PTMX library:
  At the top of the processing window, click on Sketch -> Import Library
@@ -19,15 +23,15 @@ AudioSample soundHit;
 AudioPlayer soundMenu;
 AudioSample[] arSoundMessage ;
 // ============== GLOBAL VARIABLES =============================================
-static final int TILE_SIZE = 32; //width of a tile
-
+static final int TILE_SIZE = 32; //width of a tile // Meaning of static: https://stackoverflow.com/questions/2649213/in-laymans-terms-what-does-static-mean-in-java
 int nLevel = 1; // the level number
-int nLastLevel = 20;
+static final int nLastLevel = 20;
 int nXCamOffset = 0, nYCamOffset = 0; //will translate by this much to give the effect of parallax
 PFont font8Bit, font8Bit2;
 boolean bGKey=false; // for hotkeys when trying to give up
 boolean bCTRLKey=false; // for hotkeys when trying to give up
 int nScreen = 0; // 0 = main menu, 1 = settings, 2 = credits, 3 = controls, 4 = game
+
 // ============== CREATE OBJECTS =============================================
 Sprite sprEntry; // door
 Sprite sprExit; // door
@@ -43,6 +47,7 @@ Level Lvl;
 JSONArray jsonArLevels;
 JSONObject jsonObjLevels;
 Ptmx ptmxMap;
+WindowMask windowmask;
 // ============== SETUP =============================================
 void setup() {
   frameRate(30); // to fix the lag
@@ -88,7 +93,7 @@ void setup() {
     giveUpButton.nCount++;
   }
   giveUpButton.nCount=0;
-
+  windowmask = new WindowMask();
   soundMenu.loop();
 }
 // ============== DRAW =============================================
@@ -100,7 +105,7 @@ void draw() {
   }
   if (nScreen == 4) {
     if (!giveUpButton.bTimerStarted) {
-      background(240);
+      background(249);
       updateCameraPosition();  
       backgroundParallax.update();
       //println(giveUpButton.bTimerStarted); // used for debugging
@@ -111,10 +116,18 @@ void draw() {
       sprExit.display();
       sprHero.update();
       messageEye.display();
-      messageLevelNum.display();
-      timer.display();
+
+      if (keyPressed) {
+        windowmask.continousWindow();
+      }
+      windowmask.updateImgMask();   // update the masking image
+      image(windowmask.imgMask, 0, 0); // draw the layer that has transparency in center
+
+
+      //messageLevelNum.display();
+      //timer.display();
     }
-    giveUpButton.update();
+    //giveUpButton.update();
   }
 }
 // ============== MOUSEPRESSED =============================================
@@ -186,6 +199,7 @@ void keyPressed() {
         giveUpButton.giveUpButton();
       }
     }
+    windowmask.keyPress(); // for the locking and unlocking
   }
 }
 // ============== KEY RELEASED =============================================

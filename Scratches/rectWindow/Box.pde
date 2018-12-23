@@ -1,5 +1,5 @@
 class Box {
-  int nX, nY, nSize; 
+  float nX, nY, nSize; 
   // ========================================================== CONSTRUCTOR ==========================================================================
   Box(int x, int y, int w, int h) {
     nX = x;
@@ -25,11 +25,12 @@ class Box {
     if (keyCode == LEFT) {
       nX-=5;
     }
-    if (nY<=windowmask.nWindowY) nY = windowmask.nWindowY;
-    if (nX <= windowmask.nWindowX) nX = windowmask.nWindowX;
-    if (nY+nSize>=windowmask.nWindowY+windowmask.nSizeBoxY) nY = windowmask.nWindowY+windowmask.nSizeBoxY-nSize;
+    // the "collision detection" of the player with edges of the viewWindow
+    if (nY<=windowmask.fWindowY) nY = windowmask.fWindowY;
+    if (nX <= windowmask.fWindowX) nX = windowmask.fWindowX;
+    if (nY+nSize>=windowmask.fWindowY+windowmask.fSizeBoxY) nY = windowmask.fWindowY+windowmask.fSizeBoxY-nSize;
 
-    if (nX+nSize>=windowmask.nWindowX+windowmask.nSizeBoxX) nX = windowmask.nWindowX+windowmask.nSizeBoxX-nSize;
+    if (nX+nSize>=windowmask.fWindowX+windowmask.fSizeBoxX) nX = windowmask.fWindowX+windowmask.fSizeBoxX-nSize;
   }
   // ========================================================== GET CENTER POINT ==========================================================================
   PVector getCenterPoint() {

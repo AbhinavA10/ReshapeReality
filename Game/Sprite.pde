@@ -114,6 +114,7 @@ class Sprite {
     Lvl.bDrawn=false; 
     bFlipGravity=false;
     nLevel++;
+    windowmask.resetWindow();
     if (nLevel==nLastLevel+1) {
       exit();
     }
@@ -130,6 +131,8 @@ class Sprite {
     nJumpCount=0;
     Lvl.alBullets.clear();   
     refreshCoord();
+
+    windowmask.resetWindow();
   }
   // ============== DISPLAY =============================================
   void display() {
@@ -256,5 +259,8 @@ class Sprite {
   void refreshCoord() {
     fX = vPos.x;
     fY = vPos.y;
+  }
+  PVector getBottomRightCorner() {
+    return (new PVector(this.vPos.x+this.img.width, this.vPos.y+this.img.height));
   }
 }

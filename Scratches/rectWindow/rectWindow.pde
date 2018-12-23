@@ -8,7 +8,6 @@ We found out image smashing (masking) together won't work in the real game becau
 PImage imgBg;
 
 static final int STANDARD_BOX_SIZE = 200;
-static final int EDGE_UP = 0, EDGE_DOWN =1, EDGE_LEFT =2, EDGE_RIGHT =3; 
 
 //top left corner is (0,0)
 Box player;
@@ -41,10 +40,10 @@ void draw() {
 void checkKeysContinious() {
   if (keyPressed) {
     player.continousPlayer();
-    windowmask.continousWindow();
   }
 }
 // ========================================================== KEYPRESSED ==========================================================================
 void keyPressed() {
   windowmask.keyPress(); // for the locking and unlocking
+  //player.continousPlayer();
 }
